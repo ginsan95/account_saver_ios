@@ -1,0 +1,6 @@
+framework module Pods_AccountSaverUITests {
+  umbrella header "Pods-AccountSaverUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}

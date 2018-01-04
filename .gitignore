@@ -1,0 +1,15 @@
+.DS_Store
+xcuserdata
+*.xccheckout
+*.xcscmblueprint
+
+*.log
+
+**/DerivedData
+**/build/
+**/Build/
+**/out/
+.idea/
+*.xctimeline
+*.app.dSYM.zip
+*.ipa
