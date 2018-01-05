@@ -8,8 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2EEAE5DC8270F1A498E30E64 /* Pods_AccountSaverUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D923029D4D2347C5F0AA6EF4 /* Pods_AccountSaverUITests.framework */; };
+		8478567C1FFE7FE2005BAA04 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567B1FFE7FE2005BAA04 /* Account.storyboard */; };
+		8478567E1FFE8006005BAA04 /* Personal.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567D1FFE8006005BAA04 /* Personal.storyboard */; };
 		84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DA535F1FFE783D00B2C66B /* AppDelegate.swift */; };
-		84DA53621FFE783D00B2C66B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DA53611FFE783D00B2C66B /* ViewController.swift */; };
 		84DA53651FFE783D00B2C66B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84DA53631FFE783D00B2C66B /* Main.storyboard */; };
 		84DA53671FFE783D00B2C66B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84DA53661FFE783D00B2C66B /* Assets.xcassets */; };
 		84DA536A1FFE783D00B2C66B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84DA53681FFE783D00B2C66B /* LaunchScreen.storyboard */; };
@@ -42,9 +43,10 @@
 		3D1B3CE7726B127BCA4C44EB /* Pods_AccountSaver.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AccountSaver.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7656B0A2A60DDCF1BB4DECBC /* Pods-AccountSaverUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverUITests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverUITests/Pods-AccountSaverUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		816B6D2CAF4F9535D79EB87F /* Pods-AccountSaverTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverTests/Pods-AccountSaverTests.debug.xcconfig"; sourceTree = "<group>"; };
+		8478567B1FFE7FE2005BAA04 /* Account.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
+		8478567D1FFE8006005BAA04 /* Personal.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Personal.storyboard; sourceTree = "<group>"; };
 		84DA535C1FFE783D00B2C66B /* AccountSaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccountSaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84DA535F1FFE783D00B2C66B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		84DA53611FFE783D00B2C66B /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		84DA53641FFE783D00B2C66B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		84DA53661FFE783D00B2C66B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		84DA53691FFE783D00B2C66B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -99,6 +101,33 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		847856781FFE7CAF005BAA04 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8478567A1FFE7ED2005BAA04 /* Personal */,
+				847856791FFE7ECA005BAA04 /* Account */,
+				84DA535F1FFE783D00B2C66B /* AppDelegate.swift */,
+				84DA53631FFE783D00B2C66B /* Main.storyboard */,
+			);
+			path = ViewController;
+			sourceTree = "<group>";
+		};
+		847856791FFE7ECA005BAA04 /* Account */ = {
+			isa = PBXGroup;
+			children = (
+				8478567B1FFE7FE2005BAA04 /* Account.storyboard */,
+			);
+			path = Account;
+			sourceTree = "<group>";
+		};
+		8478567A1FFE7ED2005BAA04 /* Personal */ = {
+			isa = PBXGroup;
+			children = (
+				8478567D1FFE8006005BAA04 /* Personal.storyboard */,
+			);
+			path = Personal;
+			sourceTree = "<group>";
+		};
 		84DA53531FFE783D00B2C66B = {
 			isa = PBXGroup;
 			children = (
@@ -124,9 +153,7 @@
 		84DA535E1FFE783D00B2C66B /* AccountSaver */ = {
 			isa = PBXGroup;
 			children = (
-				84DA535F1FFE783D00B2C66B /* AppDelegate.swift */,
-				84DA53611FFE783D00B2C66B /* ViewController.swift */,
-				84DA53631FFE783D00B2C66B /* Main.storyboard */,
+				847856781FFE7CAF005BAA04 /* ViewController */,
 				84DA53661FFE783D00B2C66B /* Assets.xcassets */,
 				84DA53681FFE783D00B2C66B /* LaunchScreen.storyboard */,
 				84DA536B1FFE783D00B2C66B /* Info.plist */,
@@ -282,7 +309,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				84DA536A1FFE783D00B2C66B /* LaunchScreen.storyboard in Resources */,
+				8478567E1FFE8006005BAA04 /* Personal.storyboard in Resources */,
 				84DA53671FFE783D00B2C66B /* Assets.xcassets in Resources */,
+				8478567C1FFE7FE2005BAA04 /* Account.storyboard in Resources */,
 				84DA53651FFE783D00B2C66B /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -462,7 +491,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				84DA53621FFE783D00B2C66B /* ViewController.swift in Sources */,
 				84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
