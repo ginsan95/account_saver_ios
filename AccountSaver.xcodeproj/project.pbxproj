@@ -10,6 +10,11 @@
 		2EEAE5DC8270F1A498E30E64 /* Pods_AccountSaverUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D923029D4D2347C5F0AA6EF4 /* Pods_AccountSaverUITests.framework */; };
 		8478567C1FFE7FE2005BAA04 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567B1FFE7FE2005BAA04 /* Account.storyboard */; };
 		8478567E1FFE8006005BAA04 /* Personal.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567D1FFE8006005BAA04 /* Personal.storyboard */; };
+		84D3875D1FFFCB79006C6169 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875C1FFFCB79006C6169 /* Account.swift */; };
+		84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */; };
+		84D387621FFFD543006C6169 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D387611FFFD543006C6169 /* AccountViewController.swift */; };
+		84D387652000A998006C6169 /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D387642000A998006C6169 /* BaseViewController.swift */; };
+		84D387682000AA64006C6169 /* AccountCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D387672000AA64006C6169 /* AccountCell.swift */; };
 		84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DA535F1FFE783D00B2C66B /* AppDelegate.swift */; };
 		84DA53651FFE783D00B2C66B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84DA53631FFE783D00B2C66B /* Main.storyboard */; };
 		84DA53671FFE783D00B2C66B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 84DA53661FFE783D00B2C66B /* Assets.xcassets */; };
@@ -45,6 +50,11 @@
 		816B6D2CAF4F9535D79EB87F /* Pods-AccountSaverTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverTests/Pods-AccountSaverTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8478567B1FFE7FE2005BAA04 /* Account.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
 		8478567D1FFE8006005BAA04 /* Personal.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Personal.storyboard; sourceTree = "<group>"; };
+		84D3875C1FFFCB79006C6169 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
+		84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedViews.swift; sourceTree = "<group>"; };
+		84D387611FFFD543006C6169 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		84D387642000A998006C6169 /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		84D387672000AA64006C6169 /* AccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountCell.swift; sourceTree = "<group>"; };
 		84DA535C1FFE783D00B2C66B /* AccountSaver.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AccountSaver.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		84DA535F1FFE783D00B2C66B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		84DA53641FFE783D00B2C66B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -104,8 +114,9 @@
 		847856781FFE7CAF005BAA04 /* ViewController */ = {
 			isa = PBXGroup;
 			children = (
-				8478567A1FFE7ED2005BAA04 /* Personal */,
+				84D387632000A94B006C6169 /* Common */,
 				847856791FFE7ECA005BAA04 /* Account */,
+				8478567A1FFE7ED2005BAA04 /* Personal */,
 				84DA535F1FFE783D00B2C66B /* AppDelegate.swift */,
 				84DA53631FFE783D00B2C66B /* Main.storyboard */,
 			);
@@ -116,6 +127,8 @@
 			isa = PBXGroup;
 			children = (
 				8478567B1FFE7FE2005BAA04 /* Account.storyboard */,
+				84D387611FFFD543006C6169 /* AccountViewController.swift */,
+				84D387662000AA32006C6169 /* Cells */,
 			);
 			path = Account;
 			sourceTree = "<group>";
@@ -128,12 +141,45 @@
 			path = Personal;
 			sourceTree = "<group>";
 		};
+		84D3875B1FFFCB5D006C6169 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				84D3875C1FFFCB79006C6169 /* Account.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		84D3875E1FFFD346006C6169 /* CustomViews */ = {
+			isa = PBXGroup;
+			children = (
+				84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */,
+			);
+			path = CustomViews;
+			sourceTree = "<group>";
+		};
+		84D387632000A94B006C6169 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				84D387642000A998006C6169 /* BaseViewController.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		84D387662000AA32006C6169 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				84D387672000AA64006C6169 /* AccountCell.swift */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
 		84DA53531FFE783D00B2C66B = {
 			isa = PBXGroup;
 			children = (
 				84DA535E1FFE783D00B2C66B /* AccountSaver */,
 				84DA53731FFE783D00B2C66B /* AccountSaverTests */,
 				84DA537E1FFE783D00B2C66B /* AccountSaverUITests */,
+				84D3875E1FFFD346006C6169 /* CustomViews */,
 				84DA535D1FFE783D00B2C66B /* Products */,
 				AF2B67F58E0B10C87C1B21E6 /* Pods */,
 				45CF52B41B4C3F68884D0446 /* Frameworks */,
@@ -154,6 +200,7 @@
 			isa = PBXGroup;
 			children = (
 				847856781FFE7CAF005BAA04 /* ViewController */,
+				84D3875B1FFFCB5D006C6169 /* Model */,
 				84DA53661FFE783D00B2C66B /* Assets.xcassets */,
 				84DA53681FFE783D00B2C66B /* LaunchScreen.storyboard */,
 				84DA536B1FFE783D00B2C66B /* Info.plist */,
@@ -491,7 +538,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84D387652000A998006C6169 /* BaseViewController.swift in Sources */,
+				84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */,
 				84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */,
+				84D387621FFFD543006C6169 /* AccountViewController.swift in Sources */,
+				84D3875D1FFFCB79006C6169 /* Account.swift in Sources */,
+				84D387682000AA64006C6169 /* AccountCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
