@@ -7,28 +7,54 @@
 //
 
 import UIKit
+import SDWebImage
 
 class AccountViewController: BaseViewController {
     @IBOutlet weak var collectionView: UICollectionView!
+    var refreshControl: UIRefreshControl!
+
+    var accounts: [Account] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.view.layoutIfNeeded()
+        
+        self.refreshControl = UIRefreshControl()
+        self.refreshControl.addTarget(self, action: #selector(fetchAccounts), for: UIControlEvents.valueChanged)
+        self.collectionView.addSubview(refreshControl)
+        
+        self.refreshControl.beginRefreshing()
+        self.fetchAccounts()
+    }
+    
+    @objc func fetchAccounts() {
+        BackendlessAPI.sharedInstance.fetchAccounts { (accounts: [Account], error: Error?) in
+            guard error == nil else {
+                self.refreshControl.endRefreshing()
+                return
+            }
+            
+            self.accounts = accounts
+            self.collectionView.reloadData()
+            self.refreshControl.endRefreshing()
+        }
     }
 }
 
 extension AccountViewController: UICollectionViewDataSource, UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10;
+        return self.accounts.count;
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell: AccountCell = collectionView.dequeueReusableCell(withReuseIdentifier: "AccountCell", for: indexPath) as! AccountCell
-        cell.imageView.image = #imageLiteral(resourceName: "tab_account")
-        cell.textLabel.text = "Test"
-        cell.subLabel.text = "Test 2"
-        if indexPath.row % 2 == 0 {
-            cell.rightImageView.isHidden = true
-        }
+        let account = self.accounts[indexPath.row]
+        
+        cell.imageView.sd_setImage(with: account.gameIconUrl, placeholderImage: #imageLiteral(resourceName: "placeholder"))
+        cell.textLabel.text = account.gameName
+        cell.subLabel.text = account.encrytedUsername
+        cell.rightImageView.isHidden = !account.isLocked
+        
         return cell
     }
 }
