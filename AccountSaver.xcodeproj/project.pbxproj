@@ -10,6 +10,7 @@
 		2EEAE5DC8270F1A498E30E64 /* Pods_AccountSaverUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D923029D4D2347C5F0AA6EF4 /* Pods_AccountSaverUITests.framework */; };
 		8478567C1FFE7FE2005BAA04 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567B1FFE7FE2005BAA04 /* Account.storyboard */; };
 		8478567E1FFE8006005BAA04 /* Personal.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567D1FFE8006005BAA04 /* Personal.storyboard */; };
+		84C58D0F20051C45007DF666 /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C58D0E20051C45007DF666 /* AccountDetailViewController.swift */; };
 		84D3875D1FFFCB79006C6169 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875C1FFFCB79006C6169 /* Account.swift */; };
 		84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */; };
 		84D387621FFFD543006C6169 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D387611FFFD543006C6169 /* AccountViewController.swift */; };
@@ -51,6 +52,7 @@
 		816B6D2CAF4F9535D79EB87F /* Pods-AccountSaverTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverTests/Pods-AccountSaverTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8478567B1FFE7FE2005BAA04 /* Account.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
 		8478567D1FFE8006005BAA04 /* Personal.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Personal.storyboard; sourceTree = "<group>"; };
+		84C58D0E20051C45007DF666 /* AccountDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailViewController.swift; sourceTree = "<group>"; };
 		84D3875C1FFFCB79006C6169 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedViews.swift; sourceTree = "<group>"; };
 		84D387611FFFD543006C6169 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
@@ -130,6 +132,7 @@
 			children = (
 				8478567B1FFE7FE2005BAA04 /* Account.storyboard */,
 				84D387611FFFD543006C6169 /* AccountViewController.swift */,
+				84C58D0E20051C45007DF666 /* AccountDetailViewController.swift */,
 				84D387662000AA32006C6169 /* Cells */,
 			);
 			path = Account;
@@ -550,6 +553,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				84D387652000A998006C6169 /* BaseViewController.swift in Sources */,
+				84C58D0F20051C45007DF666 /* AccountDetailViewController.swift in Sources */,
 				84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */,
 				84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */,
 				84D3876C20010CD0006C6169 /* BackendlessAPI.swift in Sources */,

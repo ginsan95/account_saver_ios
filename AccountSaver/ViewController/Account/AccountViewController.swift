@@ -39,6 +39,16 @@ class AccountViewController: BaseViewController {
             self.refreshControl.endRefreshing()
         }
     }
+    
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == "showAccountDetailVC", let detailVC: AccountDetailViewController = segue.destination as? AccountDetailViewController, let indexPath: IndexPath = self.collectionView.indexPathsForSelectedItems?.first {
+            detailVC.account = self.accounts[indexPath.item]
+            detailVC.isEditMode = false
+        }
+    }
 }
 
 extension AccountViewController: UICollectionViewDataSource, UICollectionViewDelegate {

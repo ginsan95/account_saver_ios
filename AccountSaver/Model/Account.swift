@@ -14,6 +14,7 @@ class Account {
     var username: String
     var password: String
     var isLocked: Bool
+    var updatedDate: Date
     
     // optional
     var gameIconUrl: URL?
@@ -40,7 +41,8 @@ class Account {
         guard let gameName: String = json["game_name"] as? String,
             let username: String = json["username"] as? String,
             let password: String = json["password"] as? String,
-            let isLocked: Bool = json["is_locked"] as? Bool else {
+            let isLocked: Bool = json["is_locked"] as? Bool,
+            let createdInterval: Double = json["created"] as? Double else {
                 return nil
         }
         
@@ -48,6 +50,7 @@ class Account {
         self.username = username
         self.password = password
         self.isLocked = isLocked
+        self.updatedDate = Date(timeIntervalSince1970: (json["updated"] as? Double ?? createdInterval) / 1000)
         
         if let gameIconString = json["game_icon"] as? String, let gameIconUrl = URL(string: gameIconString) {
             self.gameIconUrl = gameIconUrl
