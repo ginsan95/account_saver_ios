@@ -37,12 +37,12 @@ class BackendlessAPI {
         return Alamofire.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
     }
     
-    func fetchAccounts(completion: (([Account], Error?) -> Void)?) {
+    func fetchAccounts(completion: (([Account], String?) -> Void)?) {
         var accounts: [Account] = []
         
-        self.request(method: .get, path: "/data/Account").responseJSON { (response: DataResponse<Any>) in
+        self.request(method: .get, path: "/data/Account?sortBy=game_name").responseJSON { (response: DataResponse<Any>) in
             guard let objectJson: [[String: Any]] = response.result.value as? [[String: Any]] else {
-                completion?(accounts, response.error)
+                completion?(accounts, response.errorMessage ?? response.result.error?.localizedDescription)
                 return
             }
             
@@ -54,5 +54,26 @@ class BackendlessAPI {
             
             completion?(accounts, nil)
         }
+    }
+    
+    func saveAccount(_ account: Account, completion: ((Account?, String?) -> Void)?) {
+        self.request(method: .post, path: "/data/Account", parameters: account.json).responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let newAccount: Account = Account(json: objectJson) else {
+                    completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return
+            }
+            completion?(newAccount, nil)
+        }
+    }
+}
+
+extension DataResponse {
+    var errorMessage: String? {
+        guard let objectJson: [String: Any] = self.result.value as? [String: Any],
+            let message: String = objectJson["message"] as? String else {
+                return nil
+        }
+        return message
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 
 class Account {
     // compulsary
+    var id: String?
     var gameName: String
     var username: String
     var password: String
@@ -30,15 +31,48 @@ class Account {
         }
         
         let subIndex = self.username.count > 4 ? 4 : self.username.count - 1
-        var subString = self.username.prefix(4)
+        var subString = self.username.prefix(subIndex)
         for _ in 0..<(self.username.count - subIndex) {
             subString.append(contentsOf: "*")
         }
         return String(subString)
     }
     
+    var json: [String: Any] {
+        var body: [String: Any] = [
+            "game_name": self.gameName,
+            "username": self.username,
+            "password": self.password,
+            "is_locked": self.isLocked
+        ]
+        if let password2 = self.password2, !password2.isEmpty {
+            body["password2"] = password2
+        }
+        if let email = self.email, !email.isEmpty {
+            body["email"] = email
+        }
+        if let phoneNumber = self.phoneNumber, !phoneNumber.isEmpty {
+            body["phone_number"] = phoneNumber
+        }
+        if let description = self.description, !description.isEmpty {
+            body["description"] = description
+        }
+        return body
+    }
+    
+    // For creating new account
+    init(gameName: String, username: String, password: String) {
+        self.gameName = gameName
+        self.username = username
+        self.password = password
+        self.isLocked = false
+        self.updatedDate = Date()
+        self.securityQuestion = [:]
+    }
+    
     init?(json: [String: Any]) {
-        guard let gameName: String = json["game_name"] as? String,
+        guard let id: String = json["objectId"] as? String,
+            let gameName: String = json["game_name"] as? String,
             let username: String = json["username"] as? String,
             let password: String = json["password"] as? String,
             let isLocked: Bool = json["is_locked"] as? Bool,
@@ -46,6 +80,7 @@ class Account {
                 return nil
         }
         
+        self.id = id
         self.gameName = gameName
         self.username = username
         self.password = password
@@ -61,12 +96,22 @@ class Account {
         if let email = json["email"] as? String {
             self.email = email
         }
-        if let phoneNumber = json["phoneNumber"] as? String {
+        if let phoneNumber = json["phone_number"] as? String {
             self.phoneNumber = phoneNumber
         }
         if let description = json["description"] as? String {
             self.description = description
         }
         self.securityQuestion = [:]
+    }
+}
+
+extension Account: Equatable {
+    static func ==(lhs: Account, rhs: Account) -> Bool {
+        if let id1 = lhs.id, let id2 = rhs.id {
+            return id1 == id2
+        } else {
+            return false
+        }
     }
 }

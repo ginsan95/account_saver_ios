@@ -9,7 +9,6 @@
 import UIKit
 
 class BaseViewController: UIViewController {
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,16 +19,20 @@ class BaseViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+}
 
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+extension UIViewController {
+    public func showAlertMessage(title: String, message: String, dismissTitle: String = NSLocalizedString("OK", comment: "OK")) {
+        self.showAlertMessage(title: title, message: message, actions: [
+            UIAlertAction(title: dismissTitle, style: UIAlertActionStyle.cancel, handler: nil)
+        ])
     }
-    */
-
+    
+    public func showAlertMessage(title: String, message: String, actions: [UIAlertAction]) {
+        let alertViewController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        for action in actions {
+            alertViewController.addAction(action)
+        }
+        self.present(alertViewController, animated: true, completion: nil)
+    }
 }

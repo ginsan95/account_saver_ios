@@ -27,9 +27,42 @@ class AccountViewController: BaseViewController {
         self.fetchAccounts()
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == "showAccountDetailVC" {
+            guard let detailVC: AccountDetailViewController = segue.destination as? AccountDetailViewController, let indexPath: IndexPath = self.collectionView.indexPathsForSelectedItems?.first else {
+                return
+            }
+            detailVC.viewType = .view
+            detailVC.account = self.accounts[indexPath.item]
+            
+        } else if segue.identifier == "addAccountDetailVC" {
+            guard let navigationVC: UINavigationController = segue.destination as? UINavigationController, let detailVC: AccountDetailViewController = navigationVC.viewControllers.first as? AccountDetailViewController else {
+                return
+            }
+            detailVC.viewType = .add
+            detailVC.saveCompleteBlock = { (account: Account) in
+                self.accounts.append(account)
+                self.accounts.sort {
+                    return $0.gameName < $1.gameName
+                }
+                
+                let index = self.accounts.index(of: account)
+                if let index = index {
+                    self.collectionView.insertItems(at: [IndexPath(item: index, section: 0)])
+                } else {
+                    self.collectionView.reloadData()
+                }
+                
+                navigationVC.dismiss(animated: true)
+            }
+        }
+    }
+    
     @objc func fetchAccounts() {
-        BackendlessAPI.sharedInstance.fetchAccounts { (accounts: [Account], error: Error?) in
-            guard error == nil else {
+        BackendlessAPI.sharedInstance.fetchAccounts { (accounts: [Account], errorMessage: String?) in
+            guard errorMessage == nil else {
                 self.refreshControl.endRefreshing()
                 return
             }
@@ -37,16 +70,6 @@ class AccountViewController: BaseViewController {
             self.accounts = accounts
             self.collectionView.reloadData()
             self.refreshControl.endRefreshing()
-        }
-    }
-    
-    
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        super.prepare(for: segue, sender: sender)
-        
-        if segue.identifier == "showAccountDetailVC", let detailVC: AccountDetailViewController = segue.destination as? AccountDetailViewController, let indexPath: IndexPath = self.collectionView.indexPathsForSelectedItems?.first {
-            detailVC.account = self.accounts[indexPath.item]
-            detailVC.isEditMode = false
         }
     }
 }
