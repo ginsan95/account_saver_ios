@@ -45,13 +45,11 @@ class BackendlessAPI {
                 completion?(accounts, response.errorMessage ?? response.result.error?.localizedDescription)
                 return
             }
-            
             for json in objectJson {
                 if let account = Account(json: json) {
                     accounts.append(account)
                 }
             }
-            
             completion?(accounts, nil)
         }
     }
@@ -64,6 +62,22 @@ class BackendlessAPI {
                     return
             }
             completion?(newAccount, nil)
+        }
+    }
+    
+    func updateAccount(_ account: Account, completion: ((Account?, String?) -> Void)?) {
+        guard let id = account.id else {
+            completion?(account, nil)
+            return
+        }
+        
+        self.request(method: .put, path: "/data/Account/\(id)", parameters: account.json).responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let _: String = objectJson["objectId"] as? String else {
+                    completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return
+            }
+            completion?(account, nil)
         }
     }
 }

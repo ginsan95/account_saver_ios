@@ -60,6 +60,20 @@ class Account {
         return body
     }
     
+    var clone: Account {
+        let account: Account = Account(gameName: self.gameName, username: self.username, password: self.password)
+        account.id = self.id
+        account.isLocked = self.isLocked
+        account.updatedDate = self.updatedDate
+        account.gameIconUrl = self.gameIconUrl
+        account.password2 = self.password2
+        account.email = self.email
+        account.phoneNumber = self.phoneNumber
+        account.description = self.description
+        account.securityQuestion = self.securityQuestion
+        return account
+    }
+    
     // For creating new account
     init(gameName: String, username: String, password: String) {
         self.gameName = gameName

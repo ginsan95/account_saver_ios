@@ -36,6 +36,21 @@ class AccountViewController: BaseViewController {
             }
             detailVC.viewType = .view
             detailVC.account = self.accounts[indexPath.item]
+            detailVC.saveCompleteBlock = { (account: Account) in
+                let oldIndex = self.accounts.index(of: account)!
+                self.accounts.remove(at: oldIndex)
+                self.accounts.append(account)
+                self.accounts.sort {
+                    return $0.gameName < $1.gameName
+                }
+                
+                let index = self.accounts.index(of: account)
+                if let index = index {
+                    self.collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
+                } else {
+                    self.collectionView.reloadData()
+                }
+            }
             
         } else if segue.identifier == "addAccountDetailVC" {
             guard let navigationVC: UINavigationController = segue.destination as? UINavigationController, let detailVC: AccountDetailViewController = navigationVC.viewControllers.first as? AccountDetailViewController else {

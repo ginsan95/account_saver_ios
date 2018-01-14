@@ -37,7 +37,30 @@ class AccountDetailViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.initView()
+        self.textFields = [self.gameNameTextField, self.usernameTextField, self.passwordTextField, self.password2TextField, self.emailTextField, self.phoneTextField]
+        let canEdit = self.viewType != .view
+        
+        // set enabled or disabled
+        for textField in self.textFields {
+            textField.isEnabled = canEdit
+        }
+        self.descriptionTextView.isEditable = canEdit
+        
+        // set account view
+        self.initAccountView()
+        
+        // change action button
+        switch self.viewType! {
+        case .add:
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.addAccount))
+            self.addCloseAction()
+            self.dateContainerHeight.constant = 0
+        case .edit:
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.updateAccount))
+            self.addCloseAction()
+        case .view:
+            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.editAccount))
+        }
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -48,19 +71,16 @@ class AccountDetailViewController: UITableViewController {
             }
             detailVC.viewType = .edit
             detailVC.account = self.account
+            detailVC.saveCompleteBlock = { (account: Account) in
+                self.account = account
+                self.initAccountView()
+                navigationVC.dismiss(animated: true)
+                self.saveCompleteBlock?(account)
+            }
         }
     }
 
-    func initView() {
-        self.textFields = [self.gameNameTextField, self.usernameTextField, self.passwordTextField, self.password2TextField, self.emailTextField, self.phoneTextField]
-        let canEdit = self.viewType != .view
-        
-        // set enabled or disabled
-        for textField in self.textFields {
-            textField.isEnabled = canEdit
-        }
-        self.descriptionTextView.isEditable = canEdit
-        
+    func initAccountView() {
         if let account = self.account {
             self.title = account.gameName
             
@@ -80,19 +100,6 @@ class AccountDetailViewController: UITableViewController {
         } else {
             self.title = NSLocalizedString("New Account", comment: "New Account")
         }
-        
-        // change action button
-        switch self.viewType! {
-        case .add:
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.addAccount))
-            self.addCloseAction()
-            self.dateContainerHeight.constant = 0
-        case .edit:
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(self.updateAccount))
-            self.addCloseAction()
-        case .view:
-            self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .edit, target: self, action: #selector(self.editAccount))
-        }
     }
     
     func addCloseAction() {
@@ -100,19 +107,9 @@ class AccountDetailViewController: UITableViewController {
     }
     
     @objc func addAccount() {
-        guard checkDataEntered(),
-            let gameName = self.gameNameTextField.text,
-            let username = self.usernameTextField.text,
-            let password = self.passwordTextField.text
-            else {
-                return
+        guard let account: Account = self.accountFromFields() else {
+            return
         }
-        
-        let account = Account(gameName: gameName, username: username, password: password)
-        account.password2 = self.password2TextField.text
-        account.email = self.emailTextField.text
-        account.phoneNumber = self.phoneTextField.text
-        account.description = self.descriptionTextView.text
         
         let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
         hud.label.text = NSLocalizedString("Loading", comment: "Loading")
@@ -128,7 +125,47 @@ class AccountDetailViewController: UITableViewController {
     }
     
     @objc func updateAccount() {
+        guard let account: Account = self.accountFromFields() else {
+            return
+        }
         
+        let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+        hud.label.text = NSLocalizedString("Loading", comment: "Loading")
+        
+        BackendlessAPI.sharedInstance.updateAccount(account) { (account: Account?, errorMessage: String?) in
+            hud.hide(animated: true)
+            guard let account = account else {
+                self.showAlertMessage(title: NSLocalizedString("Error", comment: "Error"), message: errorMessage ?? NSLocalizedString("Failed to update account", comment: "Failed to update account"))
+                return
+            }
+            self.saveCompleteBlock?(account)
+        }
+    }
+    
+    func accountFromFields() -> Account? {
+        guard checkDataEntered(),
+            let gameName = self.gameNameTextField.text,
+            let username = self.usernameTextField.text,
+            let password = self.passwordTextField.text
+            else {
+                return nil
+        }
+        
+        let newAccount:Account!
+        if let account = self.account {
+            newAccount = account.clone
+            newAccount.gameName = gameName
+            newAccount.username = username
+            newAccount.password = password
+        } else {
+            newAccount = Account(gameName: gameName, username: username, password: password)
+        }
+        newAccount.password2 = self.password2TextField.text
+        newAccount.email = self.emailTextField.text
+        newAccount.phoneNumber = self.phoneTextField.text
+        newAccount.description = self.descriptionTextView.text
+        
+        return newAccount
     }
     
     func checkDataEntered() -> Bool {
@@ -155,72 +192,4 @@ class AccountDetailViewController: UITableViewController {
     @objc func dismissVC() {
         self.navigationController?.dismiss(animated: true)
     }
-
-    // MARK: - Table view data source
-
-//    override func numberOfSections(in tableView: UITableView) -> Int {
-//        // #warning Incomplete implementation, return the number of sections
-//        return 0
-//    }
-//
-//    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        // #warning Incomplete implementation, return the number of rows
-//        return 0
-//    }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
-    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
-        return true
-    }
-    */
-
-    /*
-    // Override to support editing the table view.
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            // Delete the row from the data source
-            tableView.deleteRows(at: [indexPath], with: .fade)
-        } else if editingStyle == .insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
-    }
-    */
-
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(_ tableView: UITableView, moveRowAt fromIndexPath: IndexPath, to: IndexPath) {
-
-    }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
