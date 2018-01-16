@@ -8,6 +8,7 @@
 
 import UIKit
 import SDWebImage
+import MBProgressHUD
 
 class AccountViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
@@ -112,5 +113,22 @@ extension AccountViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+            hud.label.text = NSLocalizedString("Loading", comment: "Loading")
+            
+            BackendlessAPI.sharedInstance.deleteAccount(self.accounts[indexPath.row]) { (success: Bool, errorMessage: String?) in
+                hud.hide(animated: true)
+                guard success else {
+                    self.showAlertMessage(title: NSLocalizedString("Error", comment: "Error"), message: errorMessage ?? NSLocalizedString("Failed to delete account", comment: "Failed to delete account"))
+                    return
+                }
+                self.accounts.remove(at: indexPath.row)
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+        }
     }
 }

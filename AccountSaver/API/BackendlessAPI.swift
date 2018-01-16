@@ -80,6 +80,22 @@ class BackendlessAPI {
             completion?(account, nil)
         }
     }
+    
+    func deleteAccount(_ account: Account, completion: ((Bool, String?) -> Void)?) {
+        guard let id = account.id else {
+            completion?(false, nil)
+            return
+        }
+        
+        self.request(method: .delete, path: "/data/Account/\(id)").responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let _ = objectJson["deletionTime"] else {
+                    completion?(false, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return;
+            }
+            completion?(true, nil)
+        }
+    }
 }
 
 extension DataResponse {
