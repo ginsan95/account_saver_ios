@@ -45,6 +45,9 @@ class Account {
             "password": self.password,
             "is_locked": self.isLocked
         ]
+        if let gameIconUrl = self.gameIconUrl {
+            body["game_icon"] = gameIconUrl.absoluteString
+        }
         if let password2 = self.password2, !password2.isEmpty {
             body["password2"] = password2
         }

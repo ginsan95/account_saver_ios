@@ -33,18 +33,27 @@ class AccountDetailViewController: UITableViewController {
     var viewType: ViewType!
     var account: Account?
     var saveCompleteBlock: ((Account) -> Void)?
+    var selectedIconUrl: URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.textFields = [self.gameNameTextField, self.usernameTextField, self.passwordTextField, self.password2TextField, self.emailTextField, self.phoneTextField]
         let canEdit = self.viewType != .view
+        self.logoImageView.sd_setShowActivityIndicatorView(true)
+        self.logoImageView.sd_setIndicatorStyle(.gray)
         
         // set enabled or disabled
         for textField in self.textFields {
             textField.isEnabled = canEdit
         }
         self.descriptionTextView.isEditable = canEdit
+        
+        if canEdit {
+            let singleTap = UITapGestureRecognizer(target: self, action: #selector(self.showIconVC))
+            singleTap.numberOfTapsRequired = 1
+            self.logoImageView.addGestureRecognizer(singleTap)
+        }
         
         // set account view
         self.initAccountView()
@@ -77,12 +86,24 @@ class AccountDetailViewController: UITableViewController {
                 navigationVC.dismiss(animated: true)
                 self.saveCompleteBlock?(account)
             }
+            
+        } else if segue.identifier == "showIconVC" {
+            guard let iconVC: IconViewController = segue.destination as? IconViewController else {
+                return
+            }
+            iconVC.selectedIconBlock = { (url: URL) in
+                self.logoImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "placeholder"))
+                self.selectedIconUrl = url
+                iconVC.navigationController?.popViewController(animated: true)
+            }
+            iconVC.selectedIconUrl = self.selectedIconUrl
         }
     }
 
     func initAccountView() {
         if let account = self.account {
             self.title = account.gameName
+            self.selectedIconUrl = account.gameIconUrl
             
             // display data
             let dateFormatter = DateFormatter()
@@ -160,6 +181,7 @@ class AccountDetailViewController: UITableViewController {
         } else {
             newAccount = Account(gameName: gameName, username: username, password: password)
         }
+        newAccount.gameIconUrl = self.selectedIconUrl
         newAccount.password2 = self.password2TextField.text
         newAccount.email = self.emailTextField.text
         newAccount.phoneNumber = self.phoneTextField.text
@@ -191,5 +213,9 @@ class AccountDetailViewController: UITableViewController {
     
     @objc func dismissVC() {
         self.navigationController?.dismiss(animated: true)
+    }
+    
+    @objc func showIconVC() {
+        self.performSegue(withIdentifier: "showIconVC", sender: self)
     }
 }

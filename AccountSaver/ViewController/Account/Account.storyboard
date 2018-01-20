@@ -68,7 +68,7 @@
                                                         <constraint firstAttribute="height" constant="17" id="7xy-Nw-r1Y"/>
                                                     </constraints>
                                                 </stackView>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="65i-tv-jtx" customClass="RoundedImageView" customModule="AccountSaver" customModuleProvider="target">
+                                                <imageView contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="65i-tv-jtx" customClass="RoundedImageView" customModule="AccountSaver" customModuleProvider="target">
                                                     <rect key="frame" x="137.5" y="36" width="100" height="100"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="Khe-Kt-HuG"/>
@@ -347,11 +347,105 @@
                         <outlet property="phoneTextField" destination="Vw2-s9-uXh" id="tAd-RU-cy9"/>
                         <outlet property="usernameTextField" destination="JKS-xY-PVK" id="erf-hA-NeO"/>
                         <segue destination="JfJ-dg-YGn" kind="presentation" identifier="editAccountDetailVC" id="BRE-TE-7iB"/>
+                        <segue destination="6tk-WW-VXa" kind="show" identifier="showIconVC" id="nkU-fa-91Z"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QL8-bg-F6g" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2911" y="-141"/>
+        </scene>
+        <!--Game Icon-->
+        <scene sceneID="IQh-Yd-9vr">
+            <objects>
+                <viewController id="6tk-WW-VXa" customClass="IconViewController" customModule="AccountSaver" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="DxX-oP-G9O">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OqF-4y-Lie">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="mPt-Fq-2JM">
+                                    <size key="itemSize" width="120" height="120"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="IconCell" id="oaU-6t-XQB" customClass="IconCell" customModule="AccountSaver" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="120" height="120"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="tYe-UK-RAH" customClass="RoundedImageView" customModule="AccountSaver" customModuleProvider="target">
+                                                    <rect key="frame" x="10" y="10" width="100" height="100"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="100" id="OaW-GX-bl9"/>
+                                                        <constraint firstAttribute="width" constant="100" id="mmN-kX-TkR"/>
+                                                    </constraints>
+                                                    <userDefinedRuntimeAttributes>
+                                                        <userDefinedRuntimeAttribute type="number" keyPath="cornerRadius">
+                                                            <real key="value" value="50"/>
+                                                        </userDefinedRuntimeAttribute>
+                                                    </userDefinedRuntimeAttributes>
+                                                </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="ic_tick" translatesAutoresizingMaskIntoConstraints="NO" id="XJh-g0-fm8">
+                                                    <rect key="frame" x="72" y="72" width="40" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="Lpo-ei-FS3"/>
+                                                        <constraint firstAttribute="width" constant="40" id="VVi-zF-o2i"/>
+                                                    </constraints>
+                                                </imageView>
+                                            </subviews>
+                                        </view>
+                                        <constraints>
+                                            <constraint firstAttribute="trailingMargin" secondItem="XJh-g0-fm8" secondAttribute="trailing" id="73N-04-oOQ"/>
+                                            <constraint firstItem="tYe-UK-RAH" firstAttribute="centerY" secondItem="oaU-6t-XQB" secondAttribute="centerY" id="HGS-sN-Wg3"/>
+                                            <constraint firstAttribute="bottomMargin" secondItem="XJh-g0-fm8" secondAttribute="bottom" id="etv-W2-mZX"/>
+                                            <constraint firstItem="tYe-UK-RAH" firstAttribute="centerX" secondItem="oaU-6t-XQB" secondAttribute="centerX" id="nah-2S-fLJ"/>
+                                        </constraints>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                                                <real key="value" value="0.0"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
+                                        <connections>
+                                            <outlet property="imageView" destination="tYe-UK-RAH" id="yBJ-Jn-zx6"/>
+                                            <outlet property="tickImageView" destination="XJh-g0-fm8" id="zW8-RR-Jfm"/>
+                                        </connections>
+                                    </collectionViewCell>
+                                </cells>
+                                <connections>
+                                    <outlet property="dataSource" destination="6tk-WW-VXa" id="mtN-TF-Y98"/>
+                                    <outlet property="delegate" destination="6tk-WW-VXa" id="qFQ-67-LSV"/>
+                                </connections>
+                            </collectionView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="2IC-5a-DsU" firstAttribute="bottom" secondItem="OqF-4y-Lie" secondAttribute="bottom" id="6iY-fz-ESM"/>
+                            <constraint firstItem="OqF-4y-Lie" firstAttribute="leading" secondItem="2IC-5a-DsU" secondAttribute="leading" id="85H-rr-s2Y"/>
+                            <constraint firstItem="OqF-4y-Lie" firstAttribute="top" secondItem="2IC-5a-DsU" secondAttribute="top" id="dl0-sj-TY6"/>
+                            <constraint firstItem="2IC-5a-DsU" firstAttribute="trailing" secondItem="OqF-4y-Lie" secondAttribute="trailing" id="paV-AD-ciQ"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="2IC-5a-DsU"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Game Icon" id="arU-tI-AXm">
+                        <barButtonItem key="rightBarButtonItem" title="Upload" id="gFy-Hu-QGT">
+                            <connections>
+                                <action selector="uploadIcon:" destination="6tk-WW-VXa" id="d3o-QO-fRG"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="collectionView" destination="OqF-4y-Lie" id="8ii-vq-2wN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8UY-9o-EVt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3788" y="-143.47826086956522"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="1yq-ra-7tu">
@@ -477,11 +571,12 @@
     </scenes>
     <resources>
         <image name="ic_lock" width="24" height="24"/>
+        <image name="ic_tick" width="48" height="48"/>
         <image name="placeholder" width="400" height="400"/>
         <image name="tab_account" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="2Mi-dJ-HcI"/>
-        <segue reference="pqS-Mb-h2J"/>
+        <segue reference="BRE-TE-7iB"/>
+        <segue reference="sEe-Wt-Aun"/>
     </inferredMetricsTieBreakers>
 </document>

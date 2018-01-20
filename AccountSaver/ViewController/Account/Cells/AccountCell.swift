@@ -13,4 +13,10 @@ class AccountCell: UITableViewCell {
     @IBOutlet weak var mainTextLabel: UILabel!
     @IBOutlet weak var subLabel: UILabel!
     @IBOutlet weak var rightImageView: UIImageView!
+    
+    override func awakeFromNib() {
+        super.awakeFromNib()
+        self.logoImageView.sd_setShowActivityIndicatorView(true)
+        self.logoImageView.sd_setIndicatorStyle(.gray)
+    }
 }

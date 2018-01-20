@@ -37,7 +37,7 @@ class BackendlessAPI {
         return Alamofire.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
     }
     
-    func fetchAccounts(completion: (([Account], String?) -> Void)?) {
+    func fetchAccounts(completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
         var accounts: [Account] = []
         
         self.request(method: .get, path: "/data/Account?sortBy=game_name").responseJSON { (response: DataResponse<Any>) in
@@ -54,7 +54,7 @@ class BackendlessAPI {
         }
     }
     
-    func saveAccount(_ account: Account, completion: ((Account?, String?) -> Void)?) {
+    func saveAccount(_ account: Account, completion: ((_ account: Account?, _ errorMessage: String?) -> Void)?) {
         self.request(method: .post, path: "/data/Account", parameters: account.json).responseJSON { (response: DataResponse<Any>) in
             guard let objectJson: [String: Any] = response.result.value as? [String: Any],
                 let newAccount: Account = Account(json: objectJson) else {
@@ -65,7 +65,7 @@ class BackendlessAPI {
         }
     }
     
-    func updateAccount(_ account: Account, completion: ((Account?, String?) -> Void)?) {
+    func updateAccount(_ account: Account, completion: ((_ account: Account?, _ errorMessage: String?) -> Void)?) {
         guard let id = account.id else {
             completion?(account, nil)
             return
@@ -81,7 +81,7 @@ class BackendlessAPI {
         }
     }
     
-    func deleteAccount(_ account: Account, completion: ((Bool, String?) -> Void)?) {
+    func deleteAccount(_ account: Account, completion: ((_ success: Bool, _ errorMessage: String?) -> Void)?) {
         guard let id = account.id else {
             completion?(false, nil)
             return
@@ -94,6 +94,56 @@ class BackendlessAPI {
                     return;
             }
             completion?(true, nil)
+        }
+    }
+    
+    func fetchGameIcons(completion: ((_ urls: [URL]) -> Void)?) {
+        self.request(method: .get, path: "/files/game_icon?pageSize=100").responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [[String: Any]] = response.result.value as? [[String: Any]] else {
+                completion?([])
+                return
+            }
+            var urls: [URL] = []
+            for json in objectJson {
+                if let urlString: String = json["publicUrl"] as? String, let url: URL = URL(string: urlString) {
+                    urls.append(url)
+                }
+            }
+            completion?(urls)
+        }
+    }
+    
+    func uploadGameIcon(_ image: UIImage, completion: ((_ url: URL?, _ errorMessage: String?) -> Void)?) {
+        let name: String = "game-icon-\(Date().timeIntervalSince1970)"
+        var urlComponents = URLComponents(string: BackendlessAPI.baseUrlString)
+        urlComponents?.path += "/files/game_icon/\(name)"
+        
+        guard let imageData: Data = UIImageJPEGRepresentation(image, 1.0),
+            let url = urlComponents?.url else {
+                completion?(nil, nil)
+                return
+        }
+        
+        let headers: [String: String] = ["Content-Type": "multipart/form-data"]
+        
+        Alamofire.upload(multipartFormData: { (multipartFormData: MultipartFormData) in
+            multipartFormData.append(imageData, withName: "photo", fileName: name, mimeType: "image/jpeg")
+        }, usingThreshold: UInt64(), to: url, method: .post, headers: headers) { (encodingResult: SessionManager.MultipartFormDataEncodingResult) in
+            switch encodingResult {
+            case.success(request: let upload, streamingFromDisk: _, streamFileURL: _):
+                upload.responseJSON { (response: DataResponse<Any>) in
+                    guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                        let urlStr: String = objectJson["fileURL"] as? String,
+                        let url: URL = URL(string: urlStr) else {
+                            completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
+                            return
+                    }
+                    completion?(url, nil)
+                }
+                
+            case .failure(let encodingError):
+                completion?(nil, encodingError.localizedDescription)
+            }
         }
     }
 }
