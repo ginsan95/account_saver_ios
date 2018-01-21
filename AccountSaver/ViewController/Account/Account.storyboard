@@ -363,7 +363,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="OqF-4y-Lie">
-                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <rect key="frame" x="0.0" y="64" width="375" height="554"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="0.0" minimumInteritemSpacing="0.0" id="mPt-Fq-2JM">
                                     <size key="itemSize" width="120" height="120"/>
@@ -398,13 +398,26 @@
                                                         <constraint firstAttribute="width" constant="40" id="VVi-zF-o2i"/>
                                                     </constraints>
                                                 </imageView>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tBt-ua-mne" customClass="RoundedButton" customModule="AccountSaver" customModuleProvider="target">
+                                                    <rect key="frame" x="8" y="8" width="40" height="40"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="40" id="QCz-BZ-Nxt"/>
+                                                        <constraint firstAttribute="width" constant="40" id="gCG-VE-Q6O"/>
+                                                    </constraints>
+                                                    <state key="normal" image="ic_cross"/>
+                                                    <connections>
+                                                        <action selector="deleteIcon:" destination="oaU-6t-XQB" eventType="touchUpInside" id="ScY-l6-hWb"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                         </view>
                                         <constraints>
+                                            <constraint firstItem="tBt-ua-mne" firstAttribute="top" secondItem="oaU-6t-XQB" secondAttribute="topMargin" id="6kz-nF-QqQ"/>
                                             <constraint firstAttribute="trailingMargin" secondItem="XJh-g0-fm8" secondAttribute="trailing" id="73N-04-oOQ"/>
                                             <constraint firstItem="tYe-UK-RAH" firstAttribute="centerY" secondItem="oaU-6t-XQB" secondAttribute="centerY" id="HGS-sN-Wg3"/>
                                             <constraint firstAttribute="bottomMargin" secondItem="XJh-g0-fm8" secondAttribute="bottom" id="etv-W2-mZX"/>
                                             <constraint firstItem="tYe-UK-RAH" firstAttribute="centerX" secondItem="oaU-6t-XQB" secondAttribute="centerX" id="nah-2S-fLJ"/>
+                                            <constraint firstItem="tBt-ua-mne" firstAttribute="leading" secondItem="oaU-6t-XQB" secondAttribute="leadingMargin" id="zQz-2u-W0k"/>
                                         </constraints>
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
@@ -412,6 +425,7 @@
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
+                                            <outlet property="deleteButton" destination="tBt-ua-mne" id="Coj-fo-0Sw"/>
                                             <outlet property="imageView" destination="tYe-UK-RAH" id="yBJ-Jn-zx6"/>
                                             <outlet property="tickImageView" destination="XJh-g0-fm8" id="zW8-RR-Jfm"/>
                                         </connections>
@@ -435,7 +449,7 @@
                     <navigationItem key="navigationItem" title="Game Icon" id="arU-tI-AXm">
                         <barButtonItem key="rightBarButtonItem" title="Upload" id="gFy-Hu-QGT">
                             <connections>
-                                <action selector="uploadIcon:" destination="6tk-WW-VXa" id="d3o-QO-fRG"/>
+                                <action selector="rightBarAction:" destination="6tk-WW-VXa" id="Ch0-Hq-Zmm"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -482,7 +496,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="64.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="3iR-7b-pn5" customClass="RoundedImageView" customModule="AccountSaver" customModuleProvider="target">
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="placeholder" translatesAutoresizingMaskIntoConstraints="NO" id="3iR-7b-pn5" customClass="RoundedImageView" customModule="AccountSaver" customModuleProvider="target">
                                                     <rect key="frame" x="15" y="7.5" width="50" height="50"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="50" id="AJ3-iQ-tVx"/>
@@ -570,13 +584,14 @@
         </scene>
     </scenes>
     <resources>
+        <image name="ic_cross" width="48" height="48"/>
         <image name="ic_lock" width="24" height="24"/>
         <image name="ic_tick" width="48" height="48"/>
         <image name="placeholder" width="400" height="400"/>
         <image name="tab_account" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="BRE-TE-7iB"/>
-        <segue reference="sEe-Wt-Aun"/>
+        <segue reference="2Mi-dJ-HcI"/>
+        <segue reference="pqS-Mb-h2J"/>
     </inferredMetricsTieBreakers>
 </document>

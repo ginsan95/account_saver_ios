@@ -91,7 +91,7 @@ class AccountDetailViewController: UITableViewController {
             guard let iconVC: IconViewController = segue.destination as? IconViewController else {
                 return
             }
-            iconVC.selectedIconBlock = { (url: URL) in
+            iconVC.selectedIconBlock = { (url: URL?) in
                 self.logoImageView.sd_setImage(with: url, placeholderImage: #imageLiteral(resourceName: "placeholder"))
                 self.selectedIconUrl = url
                 iconVC.navigationController?.popViewController(animated: true)

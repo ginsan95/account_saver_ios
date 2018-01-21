@@ -146,6 +146,10 @@ class BackendlessAPI {
             }
         }
     }
+    
+    func deleteGameIcon(url: URL) {
+        Alamofire.request(url, method: .delete, parameters: nil, encoding: JSONEncoding.default, headers: nil)
+    }
 }
 
 extension DataResponse {

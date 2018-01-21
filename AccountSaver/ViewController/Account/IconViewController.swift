@@ -16,7 +16,14 @@ class IconViewController: UIViewController {
     
     var iconUrls: [URL] = []
     var selectedIconUrl: URL?
-    var selectedIconBlock: ((URL) -> Void)?
+    var selectedIconBlock: ((_ url: URL?) -> Void)?
+    var isSelectedIconDeleted: Bool = false
+    var isDeleteState: Bool = false {
+        didSet {
+            self.navigationItem.rightBarButtonItem?.title = self.isDeleteState ? "Done" : "Upload"
+            self.collectionView.reloadData()
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,17 +36,41 @@ class IconViewController: UIViewController {
             self.collectionView.reloadData()
         }
         
+        // long click for collection view
+        let longClick: UILongPressGestureRecognizer = UILongPressGestureRecognizer(target: self, action: #selector(self.changeToDeleteState(gesture:)))
+        longClick.delegate = self
+        longClick.delaysTouchesBegan = true
+        self.collectionView.addGestureRecognizer(longClick)
+        
         // initialize image picker
         self.imagePickerVC.modalPresentationStyle = .currentContext
         self.imagePickerVC.delegate = self
     }
-
-    @IBAction func uploadIcon(_ sender: Any) {
-        self.requestForPhotoPermission(reason: NSLocalizedString("Account Saver need to access Photo Library to upload the game icon", comment: "Account Saver need to access Photo Library to upload the game icon")) {
-            self.imagePickerVC.sourceType = .photoLibrary
-            self.imagePickerVC.modalPresentationStyle = .popover
-            self.present(self.imagePickerVC, animated: true)
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        if (self.isMovingFromParentViewController || self.isBeingDismissed) && self.isSelectedIconDeleted && self.selectedIconUrl == nil {
+            self.selectedIconBlock?(nil)
         }
+    }
+
+    @IBAction func rightBarAction(_ sender: Any) {
+        if self.isDeleteState {
+            self.isDeleteState = false
+        } else {
+            self.requestForPhotoPermission(reason: NSLocalizedString("Account Saver need to access Photo Library to upload the game icon", comment: "Account Saver need to access Photo Library to upload the game icon")) {
+                self.imagePickerVC.sourceType = .photoLibrary
+                self.imagePickerVC.modalPresentationStyle = .popover
+                self.present(self.imagePickerVC, animated: true)
+            }
+        }
+    }
+    
+    @objc func changeToDeleteState(gesture: UILongPressGestureRecognizer) {
+        guard gesture.state == .began else {
+            return
+        }
+        self.isDeleteState = true
     }
 }
 
@@ -52,6 +83,19 @@ extension IconViewController: UICollectionViewDataSource, UICollectionViewDelega
         let cell: IconCell = collectionView.dequeueReusableCell(withReuseIdentifier: "IconCell", for: indexPath) as! IconCell
         cell.imageView.sd_setImage(with: self.iconUrls[indexPath.item], placeholderImage: #imageLiteral(resourceName: "placeholder"))
         cell.tickImageView.isHidden = self.selectedIconUrl == nil || self.selectedIconUrl! != self.iconUrls[indexPath.item]
+        cell.deleteButton.isHidden = !self.isDeleteState
+        cell.deletedCellBlock = {
+            guard let deletedIndexPath: IndexPath = self.collectionView.indexPath(for: cell) else {
+                return
+            }
+            BackendlessAPI.sharedInstance.deleteGameIcon(url: self.iconUrls[deletedIndexPath.item])
+            if let selectedIconUrl = self.selectedIconUrl, selectedIconUrl == self.iconUrls[deletedIndexPath.item] {
+                self.selectedIconUrl = nil
+                self.isSelectedIconDeleted = true
+            }
+            self.iconUrls.remove(at: deletedIndexPath.item)
+            self.collectionView.deleteItems(at: [deletedIndexPath])
+        }
         return cell
     }
     
@@ -60,11 +104,13 @@ extension IconViewController: UICollectionViewDataSource, UICollectionViewDelega
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.selectedIconBlock?(self.iconUrls[indexPath.item])
+        if (!self.isDeleteState) {
+            self.selectedIconBlock?(self.iconUrls[indexPath.item])
+        }
     }
 }
 
-extension IconViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate {
+extension IconViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         picker.dismiss(animated: true) {
             guard let image: UIImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
