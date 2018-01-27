@@ -23,6 +23,7 @@ class Account {
     var email: String?
     var phoneNumber: String?
     var description: String?
+    var lockPassword: String?
     var securityQuestion: [String: String]
     
     var encrytedUsername: String {
@@ -60,6 +61,7 @@ class Account {
         if let description = self.description, !description.isEmpty {
             body["description"] = description
         }
+        body["lock_password"] = self.lockPassword
         return body
     }
     
@@ -73,6 +75,7 @@ class Account {
         account.email = self.email
         account.phoneNumber = self.phoneNumber
         account.description = self.description
+        account.lockPassword = self.lockPassword
         account.securityQuestion = self.securityQuestion
         return account
     }
@@ -118,6 +121,9 @@ class Account {
         }
         if let description = json["description"] as? String {
             self.description = description
+        }
+        if let lockPassword = json["lock_password"] as? String {
+            self.lockPassword = lockPassword
         }
         self.securityQuestion = [:]
     }

@@ -112,7 +112,41 @@ extension AccountViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
+        let account: Account = self.accounts[indexPath.row]
+        if account.isLocked {
+            let alert: UIAlertController = UIAlertController(title: nil, message: NSLocalizedString("Enter lock password", comment: "Enter lock password"), preferredStyle: .alert)
+            alert.addTextField() { (textField: UITextField) in
+                textField.placeholder = NSLocalizedString("Password", comment: "Password")
+                textField.isSecureTextEntry = true
+            }
+            alert.addTextField() { (textField: UITextField) in
+                textField.placeholder = NSLocalizedString("Confirm password", comment: "Confirm password")
+                textField.isSecureTextEntry = true
+            }
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Confirm", comment: "Confirm"), style: .default) { (_) in
+                guard let textFields = alert.textFields,
+                    textFields.count >= 2,
+                    textFields[0].text == textFields[1].text,
+                    account.lockPassword == nil || textFields[0].text == account.lockPassword else {
+                        let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+                        hud.mode = .text
+                        hud.offset = CGPoint(x: 0, y: (self.view.frame.height/2) - self.tabBarController!.tabBar.frame.height - self.navigationController!.navigationBar.frame.height)
+                        hud.label.text = NSLocalizedString("Wrong lock password", comment: "Wrong lock password")
+                        hud.hide(animated: true, afterDelay: 2)
+                        tableView.deselectRow(at: indexPath, animated: false)
+                        return
+                }
+                self.performSegue(withIdentifier: "showAccountDetailVC", sender: self)
+                tableView.deselectRow(at: indexPath, animated: false)
+            })
+            alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel) { (_) in
+                tableView.deselectRow(at: indexPath, animated: false)
+            })
+            self.present(alert, animated: true)
+        } else {
+            self.performSegue(withIdentifier: "showAccountDetailVC", sender: self)
+            tableView.deselectRow(at: indexPath, animated: false)
+        }
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {

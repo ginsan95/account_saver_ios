@@ -12,6 +12,7 @@ import MBProgressHUD
 
 class AccountDetailViewController: UITableViewController {
     @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var lockButton: UIButton!
     @IBOutlet weak var logoImageView: RoundedImageView!
     @IBOutlet weak var dateContainerHeight: NSLayoutConstraint!
     
@@ -34,6 +35,7 @@ class AccountDetailViewController: UITableViewController {
     var account: Account?
     var saveCompleteBlock: ((Account) -> Void)?
     var selectedIconUrl: URL?
+    var lockData: (isLocked: Bool, password: String?) = (isLocked: false, password: nil)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -103,13 +105,13 @@ class AccountDetailViewController: UITableViewController {
     func initAccountView() {
         if let account = self.account {
             self.title = account.gameName
-            self.selectedIconUrl = account.gameIconUrl
             
             // display data
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yyyy hh:mm a"
             
             self.dateLabel.text = dateFormatter.string(from: account.updatedDate)
+            self.selectedIconUrl = account.gameIconUrl
             self.logoImageView.sd_setImage(with: account.gameIconUrl, placeholderImage: #imageLiteral(resourceName: "placeholder"))
             self.gameNameTextField.text = account.gameName
             self.usernameTextField.text = account.username
@@ -118,6 +120,11 @@ class AccountDetailViewController: UITableViewController {
             self.emailTextField.text = account.email
             self.phoneTextField.text = account.phoneNumber
             self.descriptionTextView.text = account.description
+            
+            self.lockData.isLocked = account.isLocked
+            self.lockData.password = account.lockPassword
+            self.lockButton.isHidden = self.viewType == .view && (self.account == nil || !self.account!.isLocked)
+            self.lockButton.setImage(account.isLocked ? #imageLiteral(resourceName: "ic_lock") : #imageLiteral(resourceName: "ic_lock_open"), for: .normal)
         } else {
             self.title = NSLocalizedString("New Account", comment: "New Account")
         }
@@ -125,6 +132,59 @@ class AccountDetailViewController: UITableViewController {
     
     func addCloseAction() {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(self.dismissVC))
+    }
+    
+    @IBAction func changeLockAccount(_ sender: Any) {
+        let canEdit = self.viewType != .view
+        guard canEdit else {
+            return
+        }
+        
+        let title: String = self.lockData.isLocked ? "Unlock" : "Add Lock"
+        let alert: UIAlertController = UIAlertController(title: NSLocalizedString(title, comment: title), message: NSLocalizedString("Enter lock password", comment: "Enter lock password"), preferredStyle: .alert)
+        alert.addTextField() { (textField: UITextField) in
+            textField.placeholder = NSLocalizedString("Password", comment: "Password")
+            textField.isSecureTextEntry = true
+        }
+        alert.addTextField() { (textField: UITextField) in
+            textField.placeholder = NSLocalizedString("Confirm password", comment: "Confirm password")
+            textField.isSecureTextEntry = true
+        }
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Confirm", comment: "Confirm"), style: .default) { (_) in
+            let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+            hud.mode = .text
+            hud.offset = CGPoint(x: 0, y: MBProgressMaxOffset)
+            
+            guard let textFields = alert.textFields,
+                textFields.count >= 2,
+                textFields[0].text == textFields[1].text else {
+                    hud.label.text = NSLocalizedString("Failed", comment: "Failed")
+                    hud.hide(animated: true, afterDelay: 2)
+                    return
+            }
+            if self.lockData.isLocked { // Unlock
+                if self.lockData.password == nil || textFields[0].text == self.lockData.password {
+                    self.lockData.isLocked = false
+                    self.lockData.password = nil
+                    self.lockButton.setImage(#imageLiteral(resourceName: "ic_lock_open"), for: .normal)
+                    
+                    hud.label.text = NSLocalizedString("Unlocked", comment: "Unlocked")
+                    hud.hide(animated: true, afterDelay: 2)
+                } else {
+                    hud.label.text = NSLocalizedString("Failed", comment: "Failed")
+                    hud.hide(animated: true, afterDelay: 2)
+                }
+            } else { // Lock
+                self.lockData.isLocked = true
+                self.lockData.password = textFields[0].text
+                self.lockButton.setImage(#imageLiteral(resourceName: "ic_lock"), for: .normal)
+                
+                hud.label.text = NSLocalizedString("Locked", comment: "Locked")
+                hud.hide(animated: true, afterDelay: 2)
+            }
+        })
+        alert.addAction(UIAlertAction(title: NSLocalizedString("Cancel", comment: "Cancel"), style: .cancel, handler: nil))
+        self.present(alert, animated: true)
     }
     
     @objc func addAccount() {
@@ -186,6 +246,8 @@ class AccountDetailViewController: UITableViewController {
         newAccount.email = self.emailTextField.text
         newAccount.phoneNumber = self.phoneTextField.text
         newAccount.description = self.descriptionTextView.text
+        newAccount.isLocked = self.lockData.isLocked
+        newAccount.lockPassword = self.lockData.password
         
         return newAccount
     }
