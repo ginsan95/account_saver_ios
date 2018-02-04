@@ -25,6 +25,7 @@ class AccountDetailViewController: UITableViewController {
     @IBOutlet weak var phoneTextField: UITextField!
     
     @IBOutlet weak var descriptionTextView: UITextView!
+    @IBOutlet weak var questionLabel: UILabel!
     
     var textFields: [UITextField]!
     
@@ -35,23 +36,27 @@ class AccountDetailViewController: UITableViewController {
     var account: Account?
     var saveCompleteBlock: ((Account) -> Void)?
     var selectedIconUrl: URL?
+    var currentSecurityQuestions: [String: String]?
     var lockData: (isLocked: Bool, password: String?) = (isLocked: false, password: nil)
+    
+    var canEdit: Bool {
+        return self.viewType != .view
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         self.textFields = [self.gameNameTextField, self.usernameTextField, self.passwordTextField, self.password2TextField, self.emailTextField, self.phoneTextField]
-        let canEdit = self.viewType != .view
         self.logoImageView.sd_setShowActivityIndicatorView(true)
         self.logoImageView.sd_setIndicatorStyle(.gray)
         
         // set enabled or disabled
         for textField in self.textFields {
-            textField.isEnabled = canEdit
+            textField.isEnabled = self.canEdit
         }
-        self.descriptionTextView.isEditable = canEdit
+        self.descriptionTextView.isEditable = self.canEdit
         
-        if canEdit {
+        if self.canEdit {
             let singleTap = UITapGestureRecognizer(target: self, action: #selector(self.showIconVC))
             singleTap.numberOfTapsRequired = 1
             self.logoImageView.addGestureRecognizer(singleTap)
@@ -99,6 +104,20 @@ class AccountDetailViewController: UITableViewController {
                 iconVC.navigationController?.popViewController(animated: true)
             }
             iconVC.selectedIconUrl = self.selectedIconUrl
+            
+        } else if segue.identifier == "showSecurityQuestionVC" {
+            guard let securityVC: SecurityQuestionsViewController = segue.destination as? SecurityQuestionsViewController else {
+                return
+            }
+            if let currentSecurityQuestions = self.currentSecurityQuestions {
+                securityVC.securityQuestions = currentSecurityQuestions
+            }
+            if self.canEdit {
+                securityVC.doneBlock = { (securityQuestions: [String: String]) in
+                    self.currentSecurityQuestions = securityQuestions
+                    self.questionLabel.text = "\(securityQuestions.count) Questions"
+                }
+            }
         }
     }
 
@@ -120,6 +139,8 @@ class AccountDetailViewController: UITableViewController {
             self.emailTextField.text = account.email
             self.phoneTextField.text = account.phoneNumber
             self.descriptionTextView.text = account.description
+            self.currentSecurityQuestions = account.securityQuestions
+            self.questionLabel.text = "\(account.securityQuestions.count) Questions"
             
             self.lockData.isLocked = account.isLocked
             self.lockData.password = account.lockPassword
@@ -135,8 +156,7 @@ class AccountDetailViewController: UITableViewController {
     }
     
     @IBAction func changeLockAccount(_ sender: Any) {
-        let canEdit = self.viewType != .view
-        guard canEdit else {
+        guard self.canEdit else {
             return
         }
         
@@ -281,3 +301,12 @@ class AccountDetailViewController: UITableViewController {
         self.performSegue(withIdentifier: "showIconVC", sender: self)
     }
 }
+
+extension AccountDetailViewController {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if indexPath.section == 4 { // Security question
+            self.performSegue(withIdentifier: "showSecurityQuestionVC", sender: self)
+        }
+    }
+}
+

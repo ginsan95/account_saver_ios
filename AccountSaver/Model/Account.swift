@@ -24,7 +24,7 @@ class Account {
     var phoneNumber: String?
     var description: String?
     var lockPassword: String?
-    var securityQuestion: [String: String]
+    var securityQuestions: [String: String]
     
     var encrytedUsername: String {
         guard self.username.count > 1 else {
@@ -62,6 +62,10 @@ class Account {
             body["description"] = description
         }
         body["lock_password"] = self.lockPassword
+        if let securityData: Data = try? JSONSerialization.data(withJSONObject: self.securityQuestions),
+            let securityString: String = String(data: securityData, encoding: .utf8) {
+                body["security_questions"] = securityString
+        }
         return body
     }
     
@@ -76,7 +80,7 @@ class Account {
         account.phoneNumber = self.phoneNumber
         account.description = self.description
         account.lockPassword = self.lockPassword
-        account.securityQuestion = self.securityQuestion
+        account.securityQuestions = self.securityQuestions
         return account
     }
     
@@ -87,7 +91,7 @@ class Account {
         self.password = password
         self.isLocked = false
         self.updatedDate = Date()
-        self.securityQuestion = [:]
+        self.securityQuestions = [:]
     }
     
     init?(json: [String: Any]) {
@@ -125,7 +129,11 @@ class Account {
         if let lockPassword = json["lock_password"] as? String {
             self.lockPassword = lockPassword
         }
-        self.securityQuestion = [:]
+        if let securityString = json["security_questions"] as? String, let dictionary = securityString.toJsonDictionary(), let securityQuestions: [String: String] = dictionary as? [String: String] {
+            self.securityQuestions = securityQuestions
+        } else {
+            self.securityQuestions = [:]
+        }
     }
 }
 
@@ -136,5 +144,16 @@ extension Account: Equatable {
         } else {
             return false
         }
+    }
+}
+
+extension String {
+    func toJsonDictionary() -> [String: Any]? {
+        guard let data: Data = self.data(using: .utf8),
+            let json: Any = try? JSONSerialization.jsonObject(with: data),
+            let dictionary: [String: Any] = json as? [String: Any] else {
+                return nil
+        }
+        return dictionary
     }
 }
