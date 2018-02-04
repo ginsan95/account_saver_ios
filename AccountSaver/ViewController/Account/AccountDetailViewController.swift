@@ -118,6 +118,7 @@ class AccountDetailViewController: UITableViewController {
                     self.questionLabel.text = "\(securityQuestions.count) Questions"
                 }
             }
+            securityVC.canEdit = self.canEdit
         }
     }
 
@@ -268,6 +269,9 @@ class AccountDetailViewController: UITableViewController {
         newAccount.description = self.descriptionTextView.text
         newAccount.isLocked = self.lockData.isLocked
         newAccount.lockPassword = self.lockData.password
+        if let currentSecurityQuestions = self.currentSecurityQuestions {
+            newAccount.securityQuestions = currentSecurityQuestions
+        }
         
         return newAccount
     }

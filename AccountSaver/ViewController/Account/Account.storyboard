@@ -30,10 +30,10 @@
             </objects>
             <point key="canvasLocation" x="1137" y="-140"/>
         </scene>
-        <!--Security Questions View Controller-->
+        <!--Security Questions-->
         <scene sceneID="qvE-2E-rK9">
             <objects>
-                <viewController hidesBottomBarWhenPushed="YES" id="ee8-D7-KUv" customClass="SecurityQuestionsViewController" customModule="AccountSaver" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController title="Security Questions" hidesBottomBarWhenPushed="YES" id="ee8-D7-KUv" customClass="SecurityQuestionsViewController" customModule="AccountSaver" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="1oi-gu-H6h">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -82,6 +82,13 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lE0-lg-taT"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Title" id="GYn-Me-t2c">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="mEU-T5-fma">
+                            <connections>
+                                <action selector="addQuestion:" destination="ee8-D7-KUv" id="0Lq-zc-qKr"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="GOx-kp-PDT" id="I56-2p-LEq"/>
                     </connections>

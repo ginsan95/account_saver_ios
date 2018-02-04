@@ -62,7 +62,8 @@ class Account {
             body["description"] = description
         }
         body["lock_password"] = self.lockPassword
-        if let securityData: Data = try? JSONSerialization.data(withJSONObject: self.securityQuestions),
+        if !self.securityQuestions.isEmpty,
+            let securityData: Data = try? JSONSerialization.data(withJSONObject: self.securityQuestions),
             let securityString: String = String(data: securityData, encoding: .utf8) {
                 body["security_questions"] = securityString
         }
