@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class IconViewController: UIViewController {
+class IconViewController: BaseViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     var imagePickerVC: UIImagePickerController = UIImagePickerController()

@@ -9,7 +9,7 @@
 import UIKit
 import MBProgressHUD
 
-class SecurityQuestionsViewController: UIViewController {
+class SecurityQuestionsViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
     
     var securityQuestions: [String: String] = [:] {

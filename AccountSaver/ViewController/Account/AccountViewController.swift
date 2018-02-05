@@ -15,17 +15,18 @@ class AccountViewController: BaseViewController {
     var refreshControl: UIRefreshControl!
 
     var accounts: [Account] = []
+    var isFetching: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.layoutIfNeeded()
         
         self.refreshControl = UIRefreshControl()
-        self.refreshControl.addTarget(self, action: #selector(fetchAccounts), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(self.refreshAccounts), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refreshControl)
         
         self.refreshControl.beginRefreshing()
-        self.fetchAccounts()
+        self.refreshAccounts()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -76,15 +77,38 @@ class AccountViewController: BaseViewController {
         }
     }
     
-    @objc func fetchAccounts() {
-        BackendlessAPI.sharedInstance.fetchAccounts { (accounts: [Account], errorMessage: String?) in
+    @objc func refreshAccounts() {
+        self.isFetching = false
+        self.fetchAccounts(offset: 0)
+    }
+    
+    func fetchAccounts(offset: Int) {
+        self.isFetching = true
+        
+        BackendlessAPI.sharedInstance.fetchAccounts(offset: offset) { (accounts: [Account], errorMessage: String?) in
             guard errorMessage == nil else {
                 self.refreshControl.endRefreshing()
+                self.isFetching = false
                 return
             }
             
-            self.accounts = accounts
-            self.tableView.reloadData()
+            if (offset == 0) { // Pull to refresh
+                self.accounts.removeAll()
+                self.accounts = accounts
+                self.tableView.reloadData()
+                self.isFetching = false
+            } else if accounts.isEmpty { // Reached the end of page, so no need to fetch anymore
+                self.isFetching = true
+            } else { // Pagination
+                let startIndex: Int = self.accounts.count
+                self.accounts.append(contentsOf: accounts)
+                var indexPaths: [IndexPath] = []
+                for i in startIndex..<self.accounts.count {
+                    indexPaths.append(IndexPath(row: i, section: 0))
+                }
+                self.tableView.insertRows(at: indexPaths, with: .automatic)
+                self.isFetching = false
+            }
             self.refreshControl.endRefreshing()
         }
     }
@@ -163,6 +187,12 @@ extension AccountViewController: UITableViewDataSource, UITableViewDelegate {
                 self.accounts.remove(at: indexPath.row)
                 self.tableView.deleteRows(at: [indexPath], with: .automatic)
             }
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        if indexPath.row == self.accounts.count - 1 && !self.isFetching {
+            self.fetchAccounts(offset: self.accounts.count)
         }
     }
 }

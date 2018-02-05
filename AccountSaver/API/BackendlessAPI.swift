@@ -12,6 +12,7 @@ import Alamofire
 class BackendlessAPI {
     fileprivate static let singleton: BackendlessAPI = BackendlessAPI()
     fileprivate static let baseUrlString: String = "https://api.backendless.com/FDB083B0-BAF9-5AA7-FF6B-507294178300/AD715598-37F8-FC4D-FFC8-56D94399D600"
+    fileprivate static let pageSize: Int = 10
     
     fileprivate let baseHeaders: [String: String] = ["Content-Type": "application/json"]
     var token: String?
@@ -37,10 +38,10 @@ class BackendlessAPI {
         return Alamofire.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
     }
     
-    func fetchAccounts(completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
+    func fetchAccounts(offset: Int, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
         var accounts: [Account] = []
         
-        self.request(method: .get, path: "/data/Account?sortBy=game_name").responseJSON { (response: DataResponse<Any>) in
+        self.request(method: .get, path: "/data/Account?sortBy=game_name&pageSize=\(BackendlessAPI.pageSize)&offset=\(offset)").responseJSON { (response: DataResponse<Any>) in
             guard let objectJson: [[String: Any]] = response.result.value as? [[String: Any]] else {
                 completion?(accounts, response.errorMessage ?? response.result.error?.localizedDescription)
                 return
