@@ -9,6 +9,7 @@ target 'AccountSaver' do
   pod 'Alamofire', '~> 4.5'
   pod 'MBProgressHUD', '~> 1.1'
   pod 'SDWebImage', '~> 4.2'
+  pod 'IQKeyboardManagerSwift'
 
   target 'AccountSaverTests' do
     inherit! :search_paths

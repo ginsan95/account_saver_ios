@@ -82,7 +82,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="lE0-lg-taT"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Title" id="GYn-Me-t2c">
+                    <navigationItem key="navigationItem" title="Security Questions" id="GYn-Me-t2c">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="mEU-T5-fma">
                             <connections>
                                 <action selector="addQuestion:" destination="ee8-D7-KUv" id="0Lq-zc-qKr"/>
