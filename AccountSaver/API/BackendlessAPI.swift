@@ -39,9 +39,18 @@ class BackendlessAPI {
     }
     
     func fetchAccounts(offset: Int, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
+        self.fetchAccounts(offset: offset, searchTerm: nil, completion: completion)
+    }
+    
+    func fetchAccounts(offset: Int, searchTerm: String?, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
         var accounts: [Account] = []
         
-        self.request(method: .get, path: "/data/Account?sortBy=game_name&pageSize=\(BackendlessAPI.pageSize)&offset=\(offset)").responseJSON { (response: DataResponse<Any>) in
+        var encoded: String = ""
+        if let searchTerm = searchTerm {
+            encoded = "game_name LIKE '%\(searchTerm)%'".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+        }
+        
+        self.request(method: .get, path: "/data/Account?where=\(encoded)&sortBy=game_name&pageSize=\(BackendlessAPI.pageSize)&offset=\(offset)").responseJSON { (response: DataResponse<Any>) in
             guard let objectJson: [[String: Any]] = response.result.value as? [[String: Any]] else {
                 completion?(accounts, response.errorMessage ?? response.result.error?.localizedDescription)
                 return

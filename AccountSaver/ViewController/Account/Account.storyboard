@@ -674,7 +674,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Account" id="P8l-mf-elB">
                         <barButtonItem key="backBarButtonItem" title=" " id="wA5-iz-5T6"/>
-                        <barButtonItem key="leftBarButtonItem" systemItem="search" id="bZG-Lt-Ae9"/>
+                        <barButtonItem key="leftBarButtonItem" systemItem="search" id="bZG-Lt-Ae9">
+                            <connections>
+                                <action selector="showSearchBar:" destination="WDc-ds-718" id="YUg-5G-obf"/>
+                            </connections>
+                        </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="Xfr-Ie-1nn">
                             <connections>
                                 <segue destination="JfJ-dg-YGn" kind="presentation" identifier="addAccountDetailVC" id="2Mi-dJ-HcI"/>
@@ -700,7 +704,7 @@
         <image name="tab_account" width="24" height="24"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="BRE-TE-7iB"/>
+        <segue reference="2Mi-dJ-HcI"/>
         <segue reference="4uY-Jt-myM"/>
     </inferredMetricsTieBreakers>
 </document>

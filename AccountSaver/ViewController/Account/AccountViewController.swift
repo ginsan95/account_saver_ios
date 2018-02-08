@@ -13,18 +13,29 @@ import MBProgressHUD
 class AccountViewController: BaseViewController {
     @IBOutlet weak var tableView: UITableView!
     var refreshControl: UIRefreshControl!
+    var searchController: UISearchController!
 
     var accounts: [Account] = []
     var isFetching: Bool = false
+    var searchTerm: String = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.layoutIfNeeded()
         
+        // Search
+        self.searchController = UISearchController(searchResultsController: nil)
+        self.searchController.hidesNavigationBarDuringPresentation = true
+        self.searchController.dimsBackgroundDuringPresentation = false
+        self.searchController.searchBar.sizeToFit()
+        self.searchController.delegate = self
+        self.searchController.searchBar.delegate = self
+        self.definesPresentationContext = true
+        
+        // Refresh control
         self.refreshControl = UIRefreshControl()
         self.refreshControl.addTarget(self, action: #selector(self.refreshAccounts), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refreshControl)
-        
         self.refreshControl.beginRefreshing()
         self.refreshAccounts()
     }
@@ -77,15 +88,21 @@ class AccountViewController: BaseViewController {
         }
     }
     
-    @objc func refreshAccounts() {
-        self.isFetching = false
-        self.fetchAccounts(offset: 0)
+    @IBAction func showSearchBar(_ sender: Any) {
+        self.tableView.tableHeaderView = self.searchController.searchBar
+        self.searchController.searchBar.becomeFirstResponder()
     }
     
-    func fetchAccounts(offset: Int) {
+    @objc func refreshAccounts() {
+        self.isFetching = false
+        self.fetchAccounts(offset: 0, searchTerm: self.searchTerm)
+    }
+    
+    func fetchAccounts(offset: Int, searchTerm: String) {
         self.isFetching = true
+        let term: String? = searchTerm.isEmpty ? nil : searchTerm
         
-        BackendlessAPI.sharedInstance.fetchAccounts(offset: offset) { (accounts: [Account], errorMessage: String?) in
+        BackendlessAPI.sharedInstance.fetchAccounts(offset: offset, searchTerm: term) { (accounts: [Account], errorMessage: String?) in
             guard errorMessage == nil else {
                 self.refreshControl.endRefreshing()
                 self.isFetching = false
@@ -192,7 +209,26 @@ extension AccountViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if indexPath.row == self.accounts.count - 1 && !self.isFetching {
-            self.fetchAccounts(offset: self.accounts.count)
+            self.fetchAccounts(offset: self.accounts.count, searchTerm: self.searchTerm)
         }
     }
 }
+
+extension AccountViewController: UISearchControllerDelegate, UISearchBarDelegate {
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard let searchTerm = searchBar.text else {
+            return
+        }
+        self.searchTerm = searchTerm
+        self.fetchAccounts(offset: 0, searchTerm: searchTerm)
+    }
+    
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        self.tableView.tableHeaderView = nil
+        if !searchTerm.isEmpty {
+            self.fetchAccounts(offset: 0, searchTerm: "")
+        }
+        self.searchTerm = ""
+    }
+}
+
