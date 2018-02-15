@@ -38,6 +38,20 @@ class BackendlessAPI {
         return Alamofire.request(url, method: method, parameters: parameters, encoding: encoding, headers: headers)
     }
     
+    func login(username: String, password: String, completion: ((_ profile: Profile?, _ token: String?, _ errorMessage: String?) -> Void)?) {
+        let params: [String: String] = ["login": username, "password": password]
+        
+        self.request(method: .post, path: "/users/login", parameters: params).responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let token: String = objectJson["user-token"] as? String,
+                let profile: Profile = Profile(json: objectJson) else {
+                completion?(nil, nil, response.errorMessage ?? response.result.error?.localizedDescription)
+                return
+            }
+            completion?(profile, token, nil)
+        }
+    }
+    
     func fetchAccounts(offset: Int, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
         self.fetchAccounts(offset: offset, searchTerm: nil, completion: completion)
     }

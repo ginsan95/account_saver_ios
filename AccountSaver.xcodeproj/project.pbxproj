@@ -10,6 +10,9 @@
 		2EEAE5DC8270F1A498E30E64 /* Pods_AccountSaverUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D923029D4D2347C5F0AA6EF4 /* Pods_AccountSaverUITests.framework */; };
 		8478567C1FFE7FE2005BAA04 /* Account.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567B1FFE7FE2005BAA04 /* Account.storyboard */; };
 		8478567E1FFE8006005BAA04 /* Personal.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8478567D1FFE8006005BAA04 /* Personal.storyboard */; };
+		849B598D20308B03001B181A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 849B598C20308B03001B181A /* LoginViewController.swift */; };
+		84C501A62031E5B700D5B3D9 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C501A52031E5B700D5B3D9 /* Profile.swift */; };
+		84C501A92031E86D00D5B3D9 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C501A82031E86D00D5B3D9 /* ProfileManager.swift */; };
 		84C58D0F20051C45007DF666 /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C58D0E20051C45007DF666 /* AccountDetailViewController.swift */; };
 		84D3875D1FFFCB79006C6169 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875C1FFFCB79006C6169 /* Account.swift */; };
 		84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */; };
@@ -26,6 +29,8 @@
 		84DA53801FFE783D00B2C66B /* AccountSaverUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DA537F1FFE783D00B2C66B /* AccountSaverUITests.swift */; };
 		84DCC6652010E8DF00A1AC23 /* IconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCC6642010E8DF00A1AC23 /* IconViewController.swift */; };
 		84DCC6672010E92700A1AC23 /* IconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCC6662010E92700A1AC23 /* IconCell.swift */; };
+		84E9E6BD202CAC1C00714367 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84E9E6BC202CAC1C00714367 /* Login.storyboard */; };
+		84EBFA60202EBE9A00E2F1C5 /* ASSTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBFA5F202EBE9A00E2F1C5 /* ASSTabBarController.swift */; };
 		96231210C2EFDAA6454D7A41 /* Pods_AccountSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D1B3CE7726B127BCA4C44EB /* Pods_AccountSaver.framework */; };
 		A3F4B7205FB86F1D029E95CA /* Pods_AccountSaverTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15EC443CA171E7A3C20C5B8A /* Pods_AccountSaverTests.framework */; };
 /* End PBXBuildFile section */
@@ -55,6 +60,9 @@
 		816B6D2CAF4F9535D79EB87F /* Pods-AccountSaverTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverTests/Pods-AccountSaverTests.debug.xcconfig"; sourceTree = "<group>"; };
 		8478567B1FFE7FE2005BAA04 /* Account.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Account.storyboard; sourceTree = "<group>"; };
 		8478567D1FFE8006005BAA04 /* Personal.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Personal.storyboard; sourceTree = "<group>"; };
+		849B598C20308B03001B181A /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		84C501A52031E5B700D5B3D9 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
+		84C501A82031E86D00D5B3D9 /* ProfileManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileManager.swift; sourceTree = "<group>"; };
 		84C58D0E20051C45007DF666 /* AccountDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountDetailViewController.swift; sourceTree = "<group>"; };
 		84D3875C1FFFCB79006C6169 /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoundedViews.swift; sourceTree = "<group>"; };
@@ -77,6 +85,8 @@
 		84DA53811FFE783D00B2C66B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		84DCC6642010E8DF00A1AC23 /* IconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconViewController.swift; sourceTree = "<group>"; };
 		84DCC6662010E92700A1AC23 /* IconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCell.swift; sourceTree = "<group>"; };
+		84E9E6BC202CAC1C00714367 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		84EBFA5F202EBE9A00E2F1C5 /* ASSTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSTabBarController.swift; sourceTree = "<group>"; };
 		8FB327381212EE36A39DB7CE /* Pods-AccountSaver.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaver.release.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaver/Pods-AccountSaver.release.xcconfig"; sourceTree = "<group>"; };
 		9491C2FDB96FBA237AFAABD7 /* Pods-AccountSaverTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverTests/Pods-AccountSaverTests.release.xcconfig"; sourceTree = "<group>"; };
 		C51ED3104CFE02F5590195F9 /* Pods-AccountSaverUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverUITests.release.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverUITests/Pods-AccountSaverUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -125,10 +135,12 @@
 			isa = PBXGroup;
 			children = (
 				84D387632000A94B006C6169 /* Common */,
+				84E9E6BB202CABEB00714367 /* Login */,
 				847856791FFE7ECA005BAA04 /* Account */,
 				8478567A1FFE7ED2005BAA04 /* Personal */,
 				84DA535F1FFE783D00B2C66B /* AppDelegate.swift */,
 				84DA53631FFE783D00B2C66B /* Main.storyboard */,
+				84EBFA5F202EBE9A00E2F1C5 /* ASSTabBarController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -154,10 +166,19 @@
 			path = Personal;
 			sourceTree = "<group>";
 		};
+		84C501A72031E84D00D5B3D9 /* Manager */ = {
+			isa = PBXGroup;
+			children = (
+				84C501A82031E86D00D5B3D9 /* ProfileManager.swift */,
+			);
+			path = Manager;
+			sourceTree = "<group>";
+		};
 		84D3875B1FFFCB5D006C6169 /* Model */ = {
 			isa = PBXGroup;
 			children = (
 				84D3875C1FFFCB79006C6169 /* Account.swift */,
+				84C501A52031E5B700D5B3D9 /* Profile.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -222,6 +243,7 @@
 			isa = PBXGroup;
 			children = (
 				847856781FFE7CAF005BAA04 /* ViewController */,
+				84C501A72031E84D00D5B3D9 /* Manager */,
 				84D3875B1FFFCB5D006C6169 /* Model */,
 				84D3876A20010C95006C6169 /* API */,
 				84DA53661FFE783D00B2C66B /* Assets.xcassets */,
@@ -247,6 +269,15 @@
 				84DA53811FFE783D00B2C66B /* Info.plist */,
 			);
 			path = AccountSaverUITests;
+			sourceTree = "<group>";
+		};
+		84E9E6BB202CABEB00714367 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				84E9E6BC202CAC1C00714367 /* Login.storyboard */,
+				849B598C20308B03001B181A /* LoginViewController.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 		AF2B67F58E0B10C87C1B21E6 /* Pods */ = {
@@ -380,6 +411,7 @@
 			files = (
 				84DA536A1FFE783D00B2C66B /* LaunchScreen.storyboard in Resources */,
 				8478567E1FFE8006005BAA04 /* Personal.storyboard in Resources */,
+				84E9E6BD202CAC1C00714367 /* Login.storyboard in Resources */,
 				84DA53671FFE783D00B2C66B /* Assets.xcassets in Resources */,
 				8478567C1FFE7FE2005BAA04 /* Account.storyboard in Resources */,
 				84DA53651FFE783D00B2C66B /* Main.storyboard in Resources */,
@@ -564,8 +596,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				84D387652000A998006C6169 /* BaseViewController.swift in Sources */,
+				84C501A92031E86D00D5B3D9 /* ProfileManager.swift in Sources */,
 				84D417C22020CB1C000E8EFA /* SecurityQuestionsViewController.swift in Sources */,
 				84C58D0F20051C45007DF666 /* AccountDetailViewController.swift in Sources */,
+				84C501A62031E5B700D5B3D9 /* Profile.swift in Sources */,
 				84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */,
 				84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */,
 				84D3876C20010CD0006C6169 /* BackendlessAPI.swift in Sources */,
@@ -574,6 +608,8 @@
 				84D387621FFFD543006C6169 /* AccountViewController.swift in Sources */,
 				84D3875D1FFFCB79006C6169 /* Account.swift in Sources */,
 				84D387682000AA64006C6169 /* AccountCell.swift in Sources */,
+				849B598D20308B03001B181A /* LoginViewController.swift in Sources */,
+				84EBFA60202EBE9A00E2F1C5 /* ASSTabBarController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
