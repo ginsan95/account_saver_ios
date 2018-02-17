@@ -13,6 +13,7 @@ class LoginViewController: UIViewController {
 
     @IBOutlet weak var usernameTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
+    var loginSuccessBlock: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -41,6 +42,7 @@ class LoginViewController: UIViewController {
                 return
             }
             
+            self.loginSuccessBlock?()
             self.dismiss(animated: true)
         }
     }

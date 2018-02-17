@@ -11,7 +11,7 @@ import UIKit
 class ASSTabBarController: UITabBarController {
 
     var isLoggedIn: Bool {
-        return ProfileManager.sharedInstance.token != nil || UserDefaults.standard.string(forKey: ProfileManager.TOKEN_KEY) != nil
+        return BackendlessAPI.sharedInstance.token != nil
     }
     
     override func viewDidLoad() {

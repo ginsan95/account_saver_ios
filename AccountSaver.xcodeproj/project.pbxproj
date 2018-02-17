@@ -30,6 +30,7 @@
 		84DCC6652010E8DF00A1AC23 /* IconViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCC6642010E8DF00A1AC23 /* IconViewController.swift */; };
 		84DCC6672010E92700A1AC23 /* IconCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84DCC6662010E92700A1AC23 /* IconCell.swift */; };
 		84E9E6BD202CAC1C00714367 /* Login.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84E9E6BC202CAC1C00714367 /* Login.storyboard */; };
+		84EA9FB7203856A000543F74 /* PersonalViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EA9FB6203856A000543F74 /* PersonalViewController.swift */; };
 		84EBFA60202EBE9A00E2F1C5 /* ASSTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84EBFA5F202EBE9A00E2F1C5 /* ASSTabBarController.swift */; };
 		96231210C2EFDAA6454D7A41 /* Pods_AccountSaver.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D1B3CE7726B127BCA4C44EB /* Pods_AccountSaver.framework */; };
 		A3F4B7205FB86F1D029E95CA /* Pods_AccountSaverTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 15EC443CA171E7A3C20C5B8A /* Pods_AccountSaverTests.framework */; };
@@ -86,6 +87,7 @@
 		84DCC6642010E8DF00A1AC23 /* IconViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconViewController.swift; sourceTree = "<group>"; };
 		84DCC6662010E92700A1AC23 /* IconCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconCell.swift; sourceTree = "<group>"; };
 		84E9E6BC202CAC1C00714367 /* Login.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Login.storyboard; sourceTree = "<group>"; };
+		84EA9FB6203856A000543F74 /* PersonalViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersonalViewController.swift; sourceTree = "<group>"; };
 		84EBFA5F202EBE9A00E2F1C5 /* ASSTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ASSTabBarController.swift; sourceTree = "<group>"; };
 		8FB327381212EE36A39DB7CE /* Pods-AccountSaver.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaver.release.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaver/Pods-AccountSaver.release.xcconfig"; sourceTree = "<group>"; };
 		9491C2FDB96FBA237AFAABD7 /* Pods-AccountSaverTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AccountSaverTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-AccountSaverTests/Pods-AccountSaverTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -162,6 +164,7 @@
 			isa = PBXGroup;
 			children = (
 				8478567D1FFE8006005BAA04 /* Personal.storyboard */,
+				84EA9FB6203856A000543F74 /* PersonalViewController.swift */,
 			);
 			path = Personal;
 			sourceTree = "<group>";
@@ -605,6 +608,7 @@
 				84D3876C20010CD0006C6169 /* BackendlessAPI.swift in Sources */,
 				84DCC6652010E8DF00A1AC23 /* IconViewController.swift in Sources */,
 				84DCC6672010E92700A1AC23 /* IconCell.swift in Sources */,
+				84EA9FB7203856A000543F74 /* PersonalViewController.swift in Sources */,
 				84D387621FFFD543006C6169 /* AccountViewController.swift in Sources */,
 				84D3875D1FFFCB79006C6169 /* Account.swift in Sources */,
 				84D387682000AA64006C6169 /* AccountCell.swift in Sources */,
