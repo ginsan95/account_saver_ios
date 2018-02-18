@@ -36,8 +36,9 @@ class AccountViewController: BaseViewController {
         self.refreshControl = UIRefreshControl()
         self.refreshControl.addTarget(self, action: #selector(self.refreshAccounts), for: UIControlEvents.valueChanged)
         self.tableView.addSubview(refreshControl)
-        self.refreshControl.beginRefreshing()
-        self.refreshAccounts()
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(self.fetchStartingData), name: .onUserLoggedIn, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.clearAccounts), name: .onUserLoggedIn, object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -86,6 +87,22 @@ class AccountViewController: BaseViewController {
                 navigationVC.dismiss(animated: true)
             }
         }
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: .onUserLoggedIn, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .onUserLoggedOut, object: nil)
+    }
+    
+    // For first time after logged in
+    @objc func fetchStartingData() {
+        self.refreshControl.beginRefreshing()
+        self.refreshAccounts()
+    }
+    
+    @objc func clearAccounts() {
+        self.accounts.removeAll()
+        self.tableView.reloadData()
     }
     
     @IBAction func showSearchBar(_ sender: Any) {

@@ -10,11 +10,15 @@ import Foundation
 
 class Profile {
     let name: String
+    let ownerId: String
     
     init?(json: [String: Any]) {
-        guard let name: String = json["name"] as? String else {
-            return nil
+        guard let name: String = json["name"] as? String,
+            let ownerId: String = json["ownerId"] as? String else {
+                return nil
         }
+        
         self.name = name
+        self.ownerId = ownerId
     }
 }

@@ -22,7 +22,6 @@ class BaseViewController: UIViewController {
     }
 }
 
-
 // Alert messages
 extension UIViewController {
     public func showAlertMessage(title: String, message: String, dismissTitle: String = NSLocalizedString("OK", comment: "OK")) {

@@ -42,6 +42,7 @@ class LoginViewController: UIViewController {
                 return
             }
             
+            NotificationCenter.default.post(name: .onUserLoggedIn, object: nil)
             self.loginSuccessBlock?()
             self.dismiss(animated: true)
         }

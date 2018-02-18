@@ -55,3 +55,8 @@ extension UIColor {
     static let asaCore: UIColor = UIColor(red: 255/255, green: 140/255, blue: 0/255, alpha: 1)
 }
 
+extension Notification.Name {
+    static let onUserLoggedIn = Notification.Name("on_user_logged_in")
+    static let onUserLoggedOut = Notification.Name("on_user_logged_out")
+}
+

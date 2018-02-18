@@ -13,6 +13,7 @@ class BackendlessAPI {
     fileprivate static let singleton: BackendlessAPI = BackendlessAPI()
     fileprivate static let baseUrlString: String = "https://api.backendless.com/FDB083B0-BAF9-5AA7-FF6B-507294178300/AD715598-37F8-FC4D-FFC8-56D94399D600"
     fileprivate static let pageSize: Int = 10
+    fileprivate static let allowedCharacterSet = CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[] ").inverted
     
     fileprivate let baseHeaders: [String: String] = ["Content-Type": "application/json"]
     var token: String?
@@ -70,9 +71,16 @@ class BackendlessAPI {
         var accounts: [Account] = []
         
         var encoded: String = ""
-        if let searchTerm = searchTerm {
-            encoded = "game_name LIKE '%\(searchTerm)%'".addingPercentEncoding(withAllowedCharacters: .urlHostAllowed) ?? ""
+        if let profile: Profile = ProfileManager.sharedInstance.profile {
+            encoded += "ownerId='\(profile.ownerId)'"
         }
+        if let searchTerm = searchTerm {
+            if !encoded.isEmpty {
+                encoded += " AND "
+            }
+            encoded += "game_name LIKE '%\(searchTerm)%'"
+        }
+        encoded = encoded.addingPercentEncoding(withAllowedCharacters: BackendlessAPI.allowedCharacterSet) ?? ""
         
         self.request(method: .get, path: "/data/Account?where=\(encoded)&sortBy=game_name&pageSize=\(BackendlessAPI.pageSize)&offset=\(offset)").responseJSON { (response: DataResponse<Any>) in
             guard let objectJson: [[String: Any]] = response.result.value as? [[String: Any]] else {
@@ -132,7 +140,12 @@ class BackendlessAPI {
     }
     
     func fetchGameIcons(completion: ((_ urls: [URL]) -> Void)?) {
-        self.request(method: .get, path: "/files/game_icon?pageSize=100").responseJSON { (response: DataResponse<Any>) in
+        guard let profile: Profile = ProfileManager.sharedInstance.profile else {
+            completion?([])
+            return
+        }
+        
+        self.request(method: .get, path: "/files/game_icon/\(profile.ownerId)?pageSize=100").responseJSON { (response: DataResponse<Any>) in
             guard let objectJson: [[String: Any]] = response.result.value as? [[String: Any]] else {
                 completion?([])
                 return
@@ -148,9 +161,14 @@ class BackendlessAPI {
     }
     
     func uploadGameIcon(_ image: UIImage, completion: ((_ url: URL?, _ errorMessage: String?) -> Void)?) {
+        guard let profile: Profile = ProfileManager.sharedInstance.profile else {
+            completion?(nil, nil)
+            return
+        }
+        
         let name: String = "game-icon-\(Date().timeIntervalSince1970)"
         var urlComponents = URLComponents(string: BackendlessAPI.baseUrlString)
-        urlComponents?.path += "/files/game_icon/\(name)"
+        urlComponents?.path += "/files/game_icon/\(profile.ownerId)/\(name)"
         
         guard let imageData: Data = UIImageJPEGRepresentation(image, 1.0),
             let url = urlComponents?.url else {

@@ -34,6 +34,8 @@ class PersonalViewController: UITableViewController {
                     return
             }
             
+            NotificationCenter.default.post(name: .onUserLoggedOut, object: nil)
+            
             loginVC.loginSuccessBlock = {
                 if let profile: Profile = ProfileManager.sharedInstance.profile {
                     self.nameLabel.text = profile.name
