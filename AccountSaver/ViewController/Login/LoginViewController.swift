@@ -23,6 +23,26 @@ class LoginViewController: UIViewController {
         self.navigationController?.navigationBar.isTranslucent = true
     }
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        super.prepare(for: segue, sender: sender)
+        
+        if segue.identifier == "showSignUpVC" {
+            guard let signUpVC: SignUpViewController = segue.destination as? SignUpViewController else {
+                return
+            }
+            signUpVC.signUpSuccessBlock = { (username: String) in
+                self.navigationController?.popViewController(animated: true)
+                self.usernameTextField.text = username
+                
+                let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
+                hud.mode = .text
+                hud.offset = CGPoint(x: 0, y: MBProgressMaxOffset)
+                hud.label.text = "Sign Up Successfully"
+                hud.hide(animated: true, afterDelay: 2.0)
+            }
+        }
+    }
+    
     @IBAction func login(_ sender: Any) {
         guard let username: String = self.usernameTextField.text,
             !username.isEmpty,

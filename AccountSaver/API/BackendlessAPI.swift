@@ -61,6 +61,19 @@ class BackendlessAPI {
             completion?()
         }
     }
+    
+    func signUp(username: String, name: String, password: String, completion: ((_ success: Bool, _ errorMessage: String?) -> Void)?) {
+        let params: [String: String] = ["username": username, "name": name, "password": password]
+        
+        self.request(method: .post, path: "/users/register", parameters: params).responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let _: String = objectJson["objectId"] as? String else {
+                    completion?(false, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return
+            }
+            completion?(true, nil)
+        }
+    }
     //
     
     func fetchAccounts(offset: Int, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
