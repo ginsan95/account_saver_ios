@@ -179,7 +179,7 @@ class BackendlessAPI {
             return
         }
         
-        let name: String = "game-icon-\(Date().timeIntervalSince1970)"
+        let name: String = "game-icon-\(Date().timeIntervalSince1970).jpeg"
         var urlComponents = URLComponents(string: BackendlessAPI.baseUrlString)
         urlComponents?.path += "/files/game_icon/\(profile.ownerId)/\(name)"
         
