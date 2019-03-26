@@ -31,7 +31,7 @@ class SecurityQuestionsViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if self.isMovingFromParentViewController || self.isBeingDismissed {
+        if self.isMovingFromParent || self.isBeingDismissed {
             self.doneBlock?(self.securityQuestions)
         }
     }
@@ -88,7 +88,7 @@ extension SecurityQuestionsViewController: UITableViewDataSource, UITableViewDel
         return cell
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let question: String = self.questions[indexPath.row].0
             self.securityQuestions[question] = nil
@@ -96,7 +96,7 @@ extension SecurityQuestionsViewController: UITableViewDataSource, UITableViewDel
         }
     }
     
-    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         return self.canEdit ? .delete : .none
     }
 }

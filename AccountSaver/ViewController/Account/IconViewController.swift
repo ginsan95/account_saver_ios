@@ -49,7 +49,7 @@ class IconViewController: BaseViewController {
     
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
-        if (self.isMovingFromParentViewController || self.isBeingDismissed) && self.isSelectedIconDeleted && self.selectedIconUrl == nil {
+        if (self.isMovingFromParent || self.isBeingDismissed) && self.isSelectedIconDeleted && self.selectedIconUrl == nil {
             self.selectedIconBlock?(nil)
         }
     }
@@ -111,9 +111,9 @@ extension IconViewController: UICollectionViewDataSource, UICollectionViewDelega
 }
 
 extension IconViewController: UINavigationControllerDelegate, UIImagePickerControllerDelegate, UIGestureRecognizerDelegate {
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true) {
-            guard let image: UIImage = info[UIImagePickerControllerOriginalImage] as? UIImage else {
+            guard let image: UIImage = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
                 self.showUploadErrorMessage()
                 return
             }
