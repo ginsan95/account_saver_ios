@@ -26,12 +26,12 @@ class BaseViewController: UIViewController {
 extension UIViewController {
     public func showAlertMessage(title: String, message: String, dismissTitle: String = NSLocalizedString("OK", comment: "OK")) {
         self.showAlertMessage(title: title, message: message, actions: [
-            UIAlertAction(title: dismissTitle, style: UIAlertActionStyle.cancel, handler: nil)
+            UIAlertAction(title: dismissTitle, style: UIAlertAction.Style.cancel, handler: nil)
         ])
     }
     
     public func showAlertMessage(title: String, message: String, actions: [UIAlertAction]) {
-        let alertViewController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        let alertViewController: UIAlertController = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
         for action in actions {
             alertViewController.addAction(action)
         }
@@ -60,9 +60,9 @@ extension UIViewController {
             authorized?()
         case .restricted, .denied:
             self.showAlertMessage(title: alertTitle, message: reason, actions: [
-                UIAlertAction(title: NSLocalizedString("Later", comment: "Later"), style: UIAlertActionStyle.cancel),
-                UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: UIAlertActionStyle.default) { (action: UIAlertAction) in
-                    guard let settingsUrl: URL = URL(string: UIApplicationOpenSettingsURLString),
+                UIAlertAction(title: NSLocalizedString("Later", comment: "Later"), style: UIAlertAction.Style.cancel),
+                UIAlertAction(title: NSLocalizedString("Settings", comment: "Settings"), style: UIAlertAction.Style.default) { (action: UIAlertAction) in
+                    guard let settingsUrl: URL = URL(string: UIApplication.openSettingsURLString),
                        UIApplication.shared.canOpenURL(settingsUrl) else {
                             return;
                     }

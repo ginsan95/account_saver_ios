@@ -183,7 +183,7 @@ class BackendlessAPI {
         var urlComponents = URLComponents(string: BackendlessAPI.baseUrlString)
         urlComponents?.path += "/files/game_icon/\(profile.ownerId)/\(name)"
         
-        guard let imageData: Data = UIImageJPEGRepresentation(image, 1.0),
+        guard let imageData: Data = image.jpegData(compressionQuality: 1.0),
             let url = urlComponents?.url else {
                 completion?(nil, nil)
                 return

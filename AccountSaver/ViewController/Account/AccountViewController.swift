@@ -34,7 +34,7 @@ class AccountViewController: BaseViewController {
         
         // Refresh control
         self.refreshControl = UIRefreshControl()
-        self.refreshControl.addTarget(self, action: #selector(self.refreshAccounts), for: UIControlEvents.valueChanged)
+        self.refreshControl.addTarget(self, action: #selector(self.refreshAccounts), for: UIControl.Event.valueChanged)
         self.tableView.addSubview(refreshControl)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.fetchStartingData), name: .onUserLoggedIn, object: nil)
@@ -207,7 +207,7 @@ extension AccountViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
             hud.label.text = NSLocalizedString("Loading", comment: "Loading")
