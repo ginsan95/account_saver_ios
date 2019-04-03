@@ -14,7 +14,7 @@
 		84C501A62031E5B700D5B3D9 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C501A52031E5B700D5B3D9 /* Profile.swift */; };
 		84C501A92031E86D00D5B3D9 /* ProfileManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C501A82031E86D00D5B3D9 /* ProfileManager.swift */; };
 		84C58D0F20051C45007DF666 /* AccountDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84C58D0E20051C45007DF666 /* AccountDetailViewController.swift */; };
-		84CCDF66224A954A00B50A27 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84CCDF64224A954A00B50A27 /* Model.xcdatamodeld */; };
+		84CCDF66224A954A00B50A27 /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 84CCDF64224A954A00B50A27 /* DataModel.xcdatamodeld */; };
 		84D3875D1FFFCB79006C6169 /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875C1FFFCB79006C6169 /* Account.swift */; };
 		84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D3875F1FFFD3C9006C6169 /* RoundedViews.swift */; };
 		84D387621FFFD543006C6169 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D387611FFFD543006C6169 /* AccountViewController.swift */; };
@@ -256,7 +256,7 @@
 				84DA53661FFE783D00B2C66B /* Assets.xcassets */,
 				84DA53681FFE783D00B2C66B /* LaunchScreen.storyboard */,
 				84DA536B1FFE783D00B2C66B /* Info.plist */,
-				84CCDF64224A954A00B50A27 /* Model.xcdatamodeld */,
+				84CCDF64224A954A00B50A27 /* DataModel.xcdatamodeld */,
 			);
 			path = AccountSaver;
 			sourceTree = "<group>";
@@ -609,7 +609,7 @@
 				84D417C22020CB1C000E8EFA /* SecurityQuestionsViewController.swift in Sources */,
 				84C58D0F20051C45007DF666 /* AccountDetailViewController.swift in Sources */,
 				84C501A62031E5B700D5B3D9 /* Profile.swift in Sources */,
-				84CCDF66224A954A00B50A27 /* Model.xcdatamodeld in Sources */,
+				84CCDF66224A954A00B50A27 /* DataModel.xcdatamodeld in Sources */,
 				84EA9FB92039A18500543F74 /* SignUpViewController.swift in Sources */,
 				84D387601FFFD3C9006C6169 /* RoundedViews.swift in Sources */,
 				84DA53601FFE783D00B2C66B /* AppDelegate.swift in Sources */,
@@ -921,13 +921,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		84CCDF64224A954A00B50A27 /* Model.xcdatamodeld */ = {
+		84CCDF64224A954A00B50A27 /* DataModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
 				84CCDF65224A954A00B50A27 /* Model.xcdatamodel */,
 			);
 			currentVersion = 84CCDF65224A954A00B50A27 /* Model.xcdatamodel */;
-			path = Model.xcdatamodeld;
+			path = DataModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
 		};

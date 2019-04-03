@@ -62,10 +62,8 @@ class Account {
             body["description"] = description
         }
         body["lock_password"] = self.lockPassword
-        if !self.securityQuestions.isEmpty,
-            let securityData: Data = try? JSONSerialization.data(withJSONObject: self.securityQuestions),
-            let securityString: String = String(data: securityData, encoding: .utf8) {
-                body["security_questions"] = securityString
+        if let securityQuestionsString = self.securityQuestionsString {
+            body["security_questions"] = securityQuestionsString
         }
         return body
     }
@@ -83,6 +81,15 @@ class Account {
         account.lockPassword = self.lockPassword
         account.securityQuestions = self.securityQuestions
         return account
+    }
+    
+    var securityQuestionsString: String? {
+        guard !self.securityQuestions.isEmpty,
+            let securityData: Data = try? JSONSerialization.data(withJSONObject: self.securityQuestions),
+            let securityString: String = String(data: securityData, encoding: .utf8) else {
+            return nil
+        }
+        return securityString
     }
     
     // For creating new account
@@ -156,5 +163,89 @@ extension String {
                 return nil
         }
         return dictionary
+    }
+}
+
+extension CDAccount {
+    var json: [String: Any]? {
+        guard let gameName = self.gameName,
+            let username = self.username,
+            let password = self.password else {
+                return nil
+        }
+        
+        var body: [String: Any] = [
+            "game_name": gameName,
+            "username": username,
+            "password": password,
+            "is_locked": isLocked
+        ]
+        if let gameIconUrl = self.gameIconUrl {
+            body["game_icon"] = gameIconUrl.absoluteString
+        }
+        if let password2 = self.password2, !password2.isEmpty {
+            body["password2"] = password2
+        }
+        if let email = self.email, !email.isEmpty {
+            body["email"] = email
+        }
+        if let phoneNumber = self.phoneNumber, !phoneNumber.isEmpty {
+            body["phone_number"] = phoneNumber
+        }
+        if let description = self.cDescription, !description.isEmpty {
+            body["description"] = description
+        }
+        body["lock_password"] = self.lockPassword
+        if let securityQuestionsJson = self.securityQuestionsJson {
+            body["security_questions"] = securityQuestionsJson
+        }
+        return body
+    }
+    
+    var securityQuestions: [String: String] {
+        if let securityQuestionsJson = self.securityQuestionsJson, let dictionary = securityQuestionsJson.toJsonDictionary(), let securityQuestions: [String: String] = dictionary as? [String: String] {
+            return securityQuestions
+        } else {
+            return [:]
+        }
+    }
+    
+    func initData(with json: [String: Any]) throws {
+        guard let id: String = json["objectId"] as? String,
+            let gameName: String = json["game_name"] as? String,
+            let username: String = json["username"] as? String,
+            let password: String = json["password"] as? String,
+            let isLocked: Bool = json["is_locked"] as? Bool,
+            let createdInterval: Double = json["created"] as? Double else {
+                throw ApiError.dataError
+        }
+        
+        self.id = id
+        self.gameName = gameName
+        self.username = username
+        self.password = password
+        self.isLocked = isLocked
+        self.updatedDate = Date(timeIntervalSince1970: (json["updated"] as? Double ?? createdInterval) / 1000)
+    }
+    
+    func initData(with model: Account) throws {
+        guard let id: String = model.id else {
+            throw ApiError.dataError
+        }
+        
+        self.id = id
+        self.gameName = model.gameName
+        self.username = model.username
+        self.password = model.password
+        self.isLocked = model.isLocked
+        self.updatedDate = model.updatedDate
+        
+        self.gameIconUrl = model.gameIconUrl
+        self.password2 = model.password2
+        self.email = model.email
+        self.phoneNumber = model.phoneNumber
+        self.cDescription = model.description
+        self.lockPassword = model.lockPassword
+        self.securityQuestionsJson = model.securityQuestionsString
     }
 }

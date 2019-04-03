@@ -209,20 +209,20 @@ class AccountDetailViewController: UITableViewController {
     }
     
     @objc func addAccount() {
-        guard let account: Account = self.accountFromFields() else {
+        guard let json: [String: Any] = self.accountJson() else {
             return
         }
         
         let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
         hud.label.text = NSLocalizedString("Loading", comment: "Loading")
         
-        BackendlessAPI.sharedInstance.saveAccount(account) { (account: Account?, errorMessage: String?) in
+        BackendlessAPI.sharedInstance.saveAccount(json) { (account: CDAccount?, errorMessage: String?) in
             hud.hide(animated: true)
             guard let account = account else {
                 self.showAlertMessage(title: NSLocalizedString("Error", comment: "Error"), message: errorMessage ?? NSLocalizedString("Failed to add account", comment: "Failed to add account"))
                 return
             }
-            self.saveCompleteBlock?(account)
+//            self.saveCompleteBlock?(account)
         }
     }
     
@@ -274,6 +274,46 @@ class AccountDetailViewController: UITableViewController {
         }
         
         return newAccount
+    }
+    
+    func accountJson() -> [String: Any]? {
+        guard checkDataEntered(),
+            let gameName = self.gameNameTextField.text,
+            let username = self.usernameTextField.text,
+            let password = self.passwordTextField.text
+            else {
+                return nil
+        }
+        
+        var json: [String: Any] = [
+            "game_name": gameName,
+            "username": username,
+            "password": password,
+            "is_locked": self.lockData.isLocked
+        ]
+        if let gameIconUrl = self.selectedIconUrl {
+            json["game_icon"] = gameIconUrl.absoluteString
+        }
+        if let password2 = self.password2TextField.text, !password2.isEmpty {
+            json["password2"] = password2
+        }
+        if let email = self.emailTextField.text, !email.isEmpty {
+            json["email"] = email
+        }
+        if let phoneNumber = self.phoneTextField.text, !phoneNumber.isEmpty {
+            json["phone_number"] = phoneNumber
+        }
+        if let description = self.descriptionTextView.text, !description.isEmpty {
+            json["description"] = description
+        }
+        if let lockPassword = self.lockData.password {
+            json["lock_password"] = lockPassword
+        }
+        if let securityQuestionsString = self.currentSecurityQuestions {
+            json["security_questions"] = securityQuestionsString
+        }
+        
+        return json
     }
     
     func checkDataEntered() -> Bool {

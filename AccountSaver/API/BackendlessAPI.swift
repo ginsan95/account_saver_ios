@@ -8,6 +8,11 @@
 
 import Foundation
 import Alamofire
+import CoreData
+
+enum ApiError: Error {
+    case dataError
+}
 
 class BackendlessAPI {
     fileprivate static let singleton: BackendlessAPI = BackendlessAPI()
@@ -21,6 +26,11 @@ class BackendlessAPI {
     static var sharedInstance: BackendlessAPI {
         return BackendlessAPI.singleton
     }
+    
+    fileprivate lazy var context: NSManagedObjectContext = {
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        return appDelegate.persistentContainer.viewContext
+    }()
     
     fileprivate func request(method: HTTPMethod, path: String, parameters: [String: Any]? = nil, encoding: ParameterEncoding = JSONEncoding.default) -> DataRequest {
         var headers: [String: String] = [:]
@@ -81,6 +91,11 @@ class BackendlessAPI {
     }
     
     func fetchAccounts(offset: Int, searchTerm: String?, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
+        let coreRequest = NSFetchRequest<CDAccount>(entityName: "CDAccount")
+        if let accounts = try? context.fetch(coreRequest) {
+            print(accounts)
+        }
+        
         var accounts: [Account] = []
         
         var encoded: String = ""
@@ -105,6 +120,24 @@ class BackendlessAPI {
                     accounts.append(account)
                 }
             }
+            
+            if offset == 0 {
+
+            }
+            for json in objectJson {
+                let coreAccount = NSEntityDescription.insertNewObject(forEntityName: "CDAccount", into: self.context) as! CDAccount
+                do {
+                    try coreAccount.initData(with: json)
+                } catch {
+                    self.context.delete(coreAccount)
+                }
+            }
+            do {
+                try self.context.save()
+            } catch {
+                print("Failed to save accounts!")
+            }
+            
             completion?(accounts, nil)
         }
     }
@@ -116,6 +149,17 @@ class BackendlessAPI {
                     completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
                     return
             }
+            
+            // Save to core data
+            if let coreAccount = NSEntityDescription.insertNewObject(forEntityName: "CDAccount", into: self.context) as? CDAccount {
+                do {
+                    try coreAccount.initData(with: account)
+                    try self.context.save()
+                } catch {
+                    self.context.delete(coreAccount)
+                }
+            }
+            
             completion?(newAccount, nil)
         }
     }
@@ -148,6 +192,76 @@ class BackendlessAPI {
                     completion?(false, response.errorMessage ?? response.result.error?.localizedDescription)
                     return;
             }
+            completion?(true, nil)
+        }
+    }
+    
+    func saveAccount(_ json: [String: Any], completion: ((_ account: CDAccount?, _ errorMessage: String?) -> Void)?) {
+        self.request(method: .post, path: "/data/Account", parameters: json).responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let _ = objectJson["objectId"] as? String else {
+                    completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return
+            }
+            
+            // Save to core data
+            guard let coreAccount = NSEntityDescription.insertNewObject(forEntityName: "CDAccount", into: self.context) as? CDAccount,
+                let _  = try? coreAccount.initData(with: objectJson),
+                let _ = try? self.context.save() else {
+                    completion?(nil, "Failed to save accounts!")
+                    return
+            }
+            
+            completion?(coreAccount, nil)
+        }
+    }
+    
+    func updateAccount(_ account: CDAccount, with json: [String: Any], completion: ((_ account: CDAccount?, _ errorMessage: String?) -> Void)?) {
+        guard let id = account.id else {
+            completion?(account, nil)
+            return
+        }
+        
+        self.request(method: .put, path: "/data/Account/\(id)", parameters: json).responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let _: String = objectJson["objectId"] as? String else {
+                    completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return
+            }
+            
+            // Save to core data
+            do {
+                try account.initData(with: objectJson)
+                try self.context.save()
+            } catch {
+                print("Failed to update accounts!")
+            }
+            
+            completion?(account, nil)
+        }
+    }
+    
+    func deleteAccount(_ account: CDAccount, completion: ((_ success: Bool, _ errorMessage: String?) -> Void)?) {
+        guard let id = account.id else {
+            completion?(false, nil)
+            return
+        }
+        
+        self.request(method: .delete, path: "/data/Account/\(id)").responseJSON { (response: DataResponse<Any>) in
+            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
+                let _ = objectJson["deletionTime"] else {
+                    completion?(false, response.errorMessage ?? response.result.error?.localizedDescription)
+                    return;
+            }
+            
+            // Delete from core data
+            self.context.delete(account)
+            do {
+                try self.context.save()
+            } catch {
+                print("Failed to delete account!")
+            }
+            
             completion?(true, nil)
         }
     }
