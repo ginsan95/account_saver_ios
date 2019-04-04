@@ -97,7 +97,7 @@ class AccountViewController: BaseViewController {
     // For first time after logged in
     @objc func fetchStartingData() {
         self.refreshControl.beginRefreshing()
-        self.refreshAccounts()
+        self.fetchAccounts(offset: 0, searchTerm: self.searchTerm)
     }
     
     @objc func clearAccounts() {

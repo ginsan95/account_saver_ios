@@ -9,7 +9,7 @@
 import UIKit
 
 class ASSTabBarController: UITabBarController {
-
+    var isFirstTime: Bool = true
     var isLoggedIn: Bool {
         return BackendlessAPI.sharedInstance.token != nil
     }
@@ -19,9 +19,13 @@ class ASSTabBarController: UITabBarController {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(true)
-        if !isLoggedIn , let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateInitialViewController() {
-            self.present(loginVC, animated: true, completion: nil)
+        super.viewDidAppear(animated)
+        if self.isFirstTime {
+            if !self.isLoggedIn , let loginVC = UIStoryboard(name: "Login", bundle: nil).instantiateInitialViewController() {
+                self.present(loginVC, animated: true, completion: nil)
+            } else {
+                NotificationCenter.default.post(name: .onUserLoggedIn, object: nil)
+            }
         }
     }
     

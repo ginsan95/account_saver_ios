@@ -22,3 +22,15 @@ class Profile {
         self.ownerId = ownerId
     }
 }
+
+extension CDProfile {
+    func initData(with json: [String: Any]) throws {
+        guard let name: String = json["name"] as? String,
+            let ownerId: String = json["ownerId"] as? String else {
+                throw ApiError.dataError
+        }
+        
+        self.name = name
+        self.ownerId = ownerId
+    }
+}

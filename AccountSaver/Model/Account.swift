@@ -167,41 +167,6 @@ extension String {
 }
 
 extension CDAccount {
-    var json: [String: Any]? {
-        guard let gameName = self.gameName,
-            let username = self.username,
-            let password = self.password else {
-                return nil
-        }
-        
-        var body: [String: Any] = [
-            "game_name": gameName,
-            "username": username,
-            "password": password,
-            "is_locked": isLocked
-        ]
-        if let gameIconUrl = self.gameIconUrl {
-            body["game_icon"] = gameIconUrl.absoluteString
-        }
-        if let password2 = self.password2, !password2.isEmpty {
-            body["password2"] = password2
-        }
-        if let email = self.email, !email.isEmpty {
-            body["email"] = email
-        }
-        if let phoneNumber = self.phoneNumber, !phoneNumber.isEmpty {
-            body["phone_number"] = phoneNumber
-        }
-        if let description = self.cDescription, !description.isEmpty {
-            body["description"] = description
-        }
-        body["lock_password"] = self.lockPassword
-        if let securityQuestionsJson = self.securityQuestionsJson {
-            body["security_questions"] = securityQuestionsJson
-        }
-        return body
-    }
-    
     var securityQuestions: [String: String] {
         if let securityQuestionsJson = self.securityQuestionsJson, let dictionary = securityQuestionsJson.toJsonDictionary(), let securityQuestions: [String: String] = dictionary as? [String: String] {
             return securityQuestions
@@ -242,26 +207,5 @@ extension CDAccount {
         self.password = password
         self.isLocked = isLocked
         self.updatedDate = Date(timeIntervalSince1970: (json["updated"] as? Double ?? createdInterval) / 1000)
-    }
-    
-    func initData(with model: Account) throws {
-        guard let id: String = model.id else {
-            throw ApiError.dataError
-        }
-        
-        self.id = id
-        self.gameName = model.gameName
-        self.username = model.username
-        self.password = model.password
-        self.isLocked = model.isLocked
-        self.updatedDate = model.updatedDate
-        
-        self.gameIconUrl = model.gameIconUrl
-        self.password2 = model.password2
-        self.email = model.email
-        self.phoneNumber = model.phoneNumber
-        self.cDescription = model.description
-        self.lockPassword = model.lockPassword
-        self.securityQuestionsJson = model.securityQuestionsString
     }
 }

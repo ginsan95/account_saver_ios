@@ -19,9 +19,18 @@ class BackendlessAPI {
     fileprivate static let baseUrlString: String = "https://api.backendless.com/FDB083B0-BAF9-5AA7-FF6B-507294178300/AD715598-37F8-FC4D-FFC8-56D94399D600"
     fileprivate static let pageSize: Int = 10
     fileprivate static let allowedCharacterSet = CharacterSet(charactersIn: "!*'();:@&=+$,/?%#[] ").inverted
+    fileprivate static let tokenKey: String = "TOKEN_KEY"
     
     fileprivate let baseHeaders: [String: String] = ["Content-Type": "application/json"]
-    var token: String?
+    var token: String? = UserDefaults.standard.value(forKey: BackendlessAPI.tokenKey) as? String {
+        didSet {
+            if let token = self.token {
+                UserDefaults.standard.set(token, forKey: BackendlessAPI.tokenKey)
+            } else {
+                UserDefaults.standard.removeObject(forKey: BackendlessAPI.tokenKey)
+            }
+        }
+    }
     
     static var sharedInstance: BackendlessAPI {
         return BackendlessAPI.singleton
@@ -68,6 +77,7 @@ class BackendlessAPI {
     func logout(completion: (() -> Void)?) {
         self.request(method: .get, path: "/users/logout").responseJSON { (response: DataResponse<Any>) in
             self.token = nil
+            self.resetAccountCache()
             completion?()
         }
     }
@@ -89,6 +99,7 @@ class BackendlessAPI {
     func fetchAccounts(offset: Int, searchTerm: String?, useCache: Bool, completion: ((_ accounts: [CDAccount], _ errorMessage: String?) -> Void)?) {
         let isSearch = !(searchTerm?.isEmpty ?? true)
         let coreRequest = NSFetchRequest<CDAccount>(entityName: "CDAccount")
+        coreRequest.sortDescriptors = [NSSortDescriptor(key: "gameName", ascending: true)]
 
         if useCache {
             if !isSearch, let accounts = try? context.fetch(coreRequest), offset < accounts.count {
@@ -97,12 +108,7 @@ class BackendlessAPI {
             }
         } else {
             // Clear all rows from core data
-            let request = NSBatchDeleteRequest(fetchRequest: coreRequest as! NSFetchRequest<NSFetchRequestResult>)
-            do {
-                let _ = try self.context.execute(request)
-            } catch {
-                print("Failed to execute request: \(error)")
-            }
+            self.resetAccountCache()
         }
         
         var accounts: [CDAccount] = []
@@ -235,6 +241,16 @@ class BackendlessAPI {
                 }
             }
             completion?(urls)
+        }
+    }
+    
+    private func resetAccountCache() {
+        let coreRequest = NSFetchRequest<CDAccount>(entityName: "CDAccount")
+        let request = NSBatchDeleteRequest(fetchRequest: coreRequest as! NSFetchRequest<NSFetchRequestResult>)
+        do {
+            let _ = try self.context.execute(request)
+        } catch {
+            print("Failed to execute request: \(error)")
         }
     }
     
