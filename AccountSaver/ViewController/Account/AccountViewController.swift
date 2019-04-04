@@ -15,7 +15,7 @@ class AccountViewController: BaseViewController {
     var refreshControl: UIRefreshControl!
     var searchController: UISearchController!
 
-    var accounts: [Account] = []
+    var accounts: [CDAccount] = []
     var isFetching: Bool = false
     var searchTerm: String = ""
     
@@ -38,7 +38,7 @@ class AccountViewController: BaseViewController {
         self.tableView.addSubview(refreshControl)
         
         NotificationCenter.default.addObserver(self, selector: #selector(self.fetchStartingData), name: .onUserLoggedIn, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(self.clearAccounts), name: .onUserLoggedIn, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.clearAccounts), name: .onUserLoggedOut, object: nil)
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -50,14 +50,14 @@ class AccountViewController: BaseViewController {
             }
             detailVC.viewType = .view
             detailVC.account = self.accounts[indexPath.row]
-            detailVC.saveCompleteBlock = { (account: Account) in
+            detailVC.saveCompleteBlock = { (account: CDAccount) in
                 let oldIndex = self.accounts.index(of: account)!
                 self.accounts.remove(at: oldIndex)
                 self.accounts.append(account)
                 self.accounts.sort {
-                    return $0.gameName < $1.gameName
+                    return $0.gameName ?? "" < $1.gameName ?? ""
                 }
-                
+
                 let index = self.accounts.index(of: account)
                 if let index = index, index == oldIndex {
                     self.tableView.reloadRows(at: [IndexPath(item: index, section: 0)], with: .automatic)
@@ -71,19 +71,19 @@ class AccountViewController: BaseViewController {
                 return
             }
             detailVC.viewType = .add
-            detailVC.saveCompleteBlock = { (account: Account) in
+            detailVC.saveCompleteBlock = { (account: CDAccount) in
                 self.accounts.append(account)
                 self.accounts.sort {
-                    return $0.gameName < $1.gameName
+                    return $0.gameName ?? "" < $1.gameName ?? ""
                 }
-                
+
                 let index = self.accounts.index(of: account)
                 if let index = index {
                     self.tableView.insertRows(at: [IndexPath(item: index, section: 0)], with: .automatic)
                 } else {
                     self.tableView.reloadData()
                 }
-                
+
                 navigationVC.dismiss(animated: true)
             }
         }
@@ -112,14 +112,14 @@ class AccountViewController: BaseViewController {
     
     @objc func refreshAccounts() {
         self.isFetching = false
-        self.fetchAccounts(offset: 0, searchTerm: self.searchTerm)
+        self.fetchAccounts(offset: 0, searchTerm: self.searchTerm, useCache: false)
     }
     
-    func fetchAccounts(offset: Int, searchTerm: String) {
+    func fetchAccounts(offset: Int, searchTerm: String, useCache: Bool = true) {
         self.isFetching = true
         let term: String? = searchTerm.isEmpty ? nil : searchTerm
         
-        BackendlessAPI.sharedInstance.fetchAccounts(offset: offset, searchTerm: term) { (accounts: [Account], errorMessage: String?) in
+        BackendlessAPI.sharedInstance.fetchAccounts(offset: offset, searchTerm: term, useCache: useCache) { (accounts: [CDAccount], errorMessage: String?) in
             guard errorMessage == nil else {
                 self.refreshControl.endRefreshing()
                 self.isFetching = false
@@ -170,7 +170,7 @@ extension AccountViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let account: Account = self.accounts[indexPath.row]
+        let account: CDAccount = self.accounts[indexPath.row]
         if account.isLocked {
             let alert: UIAlertController = UIAlertController(title: nil, message: NSLocalizedString("Enter lock password", comment: "Enter lock password"), preferredStyle: .alert)
             alert.addTextField() { (textField: UITextField) in

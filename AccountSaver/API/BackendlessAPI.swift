@@ -86,17 +86,26 @@ class BackendlessAPI {
     }
     //
     
-    func fetchAccounts(offset: Int, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
-        self.fetchAccounts(offset: offset, searchTerm: nil, completion: completion)
-    }
-    
-    func fetchAccounts(offset: Int, searchTerm: String?, completion: ((_ accounts: [Account], _ errorMessage: String?) -> Void)?) {
+    func fetchAccounts(offset: Int, searchTerm: String?, useCache: Bool, completion: ((_ accounts: [CDAccount], _ errorMessage: String?) -> Void)?) {
+        let isSearch = !(searchTerm?.isEmpty ?? true)
         let coreRequest = NSFetchRequest<CDAccount>(entityName: "CDAccount")
-        if let accounts = try? context.fetch(coreRequest) {
-            print(accounts)
+
+        if useCache {
+            if !isSearch, let accounts = try? context.fetch(coreRequest), offset < accounts.count {
+                completion?(accounts, nil)
+                return
+            }
+        } else {
+            // Clear all rows from core data
+            let request = NSBatchDeleteRequest(fetchRequest: coreRequest as! NSFetchRequest<NSFetchRequestResult>)
+            do {
+                let _ = try self.context.execute(request)
+            } catch {
+                print("Failed to execute request: \(error)")
+            }
         }
         
-        var accounts: [Account] = []
+        var accounts: [CDAccount] = []
         
         var encoded: String = ""
         if let profile: Profile = ProfileManager.sharedInstance.profile {
@@ -115,84 +124,26 @@ class BackendlessAPI {
                 completion?(accounts, response.errorMessage ?? response.result.error?.localizedDescription)
                 return
             }
+            
             for json in objectJson {
-                if let account = Account(json: json) {
+                let account = CDAccount(context: self.context)
+                if let _ = try? account.initData(with: json) {
                     accounts.append(account)
+                    if !isSearch {
+                        self.context.insert(account)
+                    }
                 }
             }
             
-            if offset == 0 {
-
-            }
-            for json in objectJson {
-                let coreAccount = NSEntityDescription.insertNewObject(forEntityName: "CDAccount", into: self.context) as! CDAccount
+            if !isSearch {
                 do {
-                    try coreAccount.initData(with: json)
+                    try self.context.save()
                 } catch {
-                    self.context.delete(coreAccount)
+                    print("Failed to save accounts!")
                 }
-            }
-            do {
-                try self.context.save()
-            } catch {
-                print("Failed to save accounts!")
             }
             
             completion?(accounts, nil)
-        }
-    }
-    
-    func saveAccount(_ account: Account, completion: ((_ account: Account?, _ errorMessage: String?) -> Void)?) {
-        self.request(method: .post, path: "/data/Account", parameters: account.json).responseJSON { (response: DataResponse<Any>) in
-            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
-                let newAccount: Account = Account(json: objectJson) else {
-                    completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
-                    return
-            }
-            
-            // Save to core data
-            if let coreAccount = NSEntityDescription.insertNewObject(forEntityName: "CDAccount", into: self.context) as? CDAccount {
-                do {
-                    try coreAccount.initData(with: account)
-                    try self.context.save()
-                } catch {
-                    self.context.delete(coreAccount)
-                }
-            }
-            
-            completion?(newAccount, nil)
-        }
-    }
-    
-    func updateAccount(_ account: Account, completion: ((_ account: Account?, _ errorMessage: String?) -> Void)?) {
-        guard let id = account.id else {
-            completion?(account, nil)
-            return
-        }
-        
-        self.request(method: .put, path: "/data/Account/\(id)", parameters: account.json).responseJSON { (response: DataResponse<Any>) in
-            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
-                let _: String = objectJson["objectId"] as? String else {
-                    completion?(nil, response.errorMessage ?? response.result.error?.localizedDescription)
-                    return
-            }
-            completion?(account, nil)
-        }
-    }
-    
-    func deleteAccount(_ account: Account, completion: ((_ success: Bool, _ errorMessage: String?) -> Void)?) {
-        guard let id = account.id else {
-            completion?(false, nil)
-            return
-        }
-        
-        self.request(method: .delete, path: "/data/Account/\(id)").responseJSON { (response: DataResponse<Any>) in
-            guard let objectJson: [String: Any] = response.result.value as? [String: Any],
-                let _ = objectJson["deletionTime"] else {
-                    completion?(false, response.errorMessage ?? response.result.error?.localizedDescription)
-                    return;
-            }
-            completion?(true, nil)
         }
     }
     

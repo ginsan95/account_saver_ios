@@ -33,8 +33,8 @@ class AccountDetailViewController: UITableViewController {
         case add, edit, view
     }
     var viewType: ViewType!
-    var account: Account?
-    var saveCompleteBlock: ((Account) -> Void)?
+    var account: CDAccount?
+    var saveCompleteBlock: ((CDAccount) -> Void)?
     var selectedIconUrl: URL?
     var currentSecurityQuestions: [String: String]?
     var lockData: (isLocked: Bool, password: String?) = (isLocked: false, password: nil)
@@ -87,7 +87,7 @@ class AccountDetailViewController: UITableViewController {
             }
             detailVC.viewType = .edit
             detailVC.account = self.account
-            detailVC.saveCompleteBlock = { (account: Account) in
+            detailVC.saveCompleteBlock = { (account: CDAccount) in
                 self.account = account
                 self.initAccountView()
                 navigationVC.dismiss(animated: true)
@@ -130,7 +130,7 @@ class AccountDetailViewController: UITableViewController {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "dd/MM/yyyy hh:mm a"
             
-            self.dateLabel.text = dateFormatter.string(from: account.updatedDate)
+            self.dateLabel.text = dateFormatter.string(from: account.updatedDate ?? Date())
             self.selectedIconUrl = account.gameIconUrl
             self.logoImageView.sd_setImage(with: account.gameIconUrl, placeholderImage: #imageLiteral(resourceName: "placeholder"))
             self.gameNameTextField.text = account.gameName
@@ -139,7 +139,7 @@ class AccountDetailViewController: UITableViewController {
             self.password2TextField.text = account.password2
             self.emailTextField.text = account.email
             self.phoneTextField.text = account.phoneNumber
-            self.descriptionTextView.text = account.description
+            self.descriptionTextView.text = account.cDescription
             self.currentSecurityQuestions = account.securityQuestions
             self.questionLabel.text = "\(account.securityQuestions.count) Questions"
             
@@ -222,19 +222,19 @@ class AccountDetailViewController: UITableViewController {
                 self.showAlertMessage(title: NSLocalizedString("Error", comment: "Error"), message: errorMessage ?? NSLocalizedString("Failed to add account", comment: "Failed to add account"))
                 return
             }
-//            self.saveCompleteBlock?(account)
+            self.saveCompleteBlock?(account)
         }
     }
     
     @objc func updateAccount() {
-        guard let account: Account = self.accountFromFields() else {
+        guard let account = self.account, let json: [String: Any] = self.accountJson() else {
             return
         }
         
         let hud: MBProgressHUD = MBProgressHUD.showAdded(to: self.view, animated: true)
         hud.label.text = NSLocalizedString("Loading", comment: "Loading")
         
-        BackendlessAPI.sharedInstance.updateAccount(account) { (account: Account?, errorMessage: String?) in
+        BackendlessAPI.sharedInstance.updateAccount(account, with: json) { (account: CDAccount?, errorMessage: String?) in
             hud.hide(animated: true)
             guard let account = account else {
                 self.showAlertMessage(title: NSLocalizedString("Error", comment: "Error"), message: errorMessage ?? NSLocalizedString("Failed to update account", comment: "Failed to update account"))
@@ -242,38 +242,6 @@ class AccountDetailViewController: UITableViewController {
             }
             self.saveCompleteBlock?(account)
         }
-    }
-    
-    func accountFromFields() -> Account? {
-        guard checkDataEntered(),
-            let gameName = self.gameNameTextField.text,
-            let username = self.usernameTextField.text,
-            let password = self.passwordTextField.text
-            else {
-                return nil
-        }
-        
-        let newAccount:Account!
-        if let account = self.account {
-            newAccount = account.clone
-            newAccount.gameName = gameName
-            newAccount.username = username
-            newAccount.password = password
-        } else {
-            newAccount = Account(gameName: gameName, username: username, password: password)
-        }
-        newAccount.gameIconUrl = self.selectedIconUrl
-        newAccount.password2 = self.password2TextField.text
-        newAccount.email = self.emailTextField.text
-        newAccount.phoneNumber = self.phoneTextField.text
-        newAccount.description = self.descriptionTextView.text
-        newAccount.isLocked = self.lockData.isLocked
-        newAccount.lockPassword = self.lockData.password
-        if let currentSecurityQuestions = self.currentSecurityQuestions {
-            newAccount.securityQuestions = currentSecurityQuestions
-        }
-        
-        return newAccount
     }
     
     func accountJson() -> [String: Any]? {

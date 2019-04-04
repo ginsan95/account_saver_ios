@@ -210,6 +210,22 @@ extension CDAccount {
         }
     }
     
+    var encrytedUsername: String {
+        guard let username = self.username else {
+            return ""
+        }
+        guard username.count > 1 else {
+            return username
+        }
+        
+        let subIndex = username.count > 4 ? 4 : username.count - 1
+        var subString = username.prefix(subIndex)
+        for _ in 0..<(username.count - subIndex) {
+            subString.append(contentsOf: "*")
+        }
+        return String(subString)
+    }
+    
     func initData(with json: [String: Any]) throws {
         guard let id: String = json["objectId"] as? String,
             let gameName: String = json["game_name"] as? String,
